@@ -1,10 +1,10 @@
 %%MAIN
 
-    QR sigs IoT
+    QR sigs IoT 
     https://ieeexplore.ieee.org/abstract/document/9152977
     @ARTICLE{QR_sigs,  author={S. {Suhail} and R. {Hussain} and A. {Khan} and C. S. {Hong}},  journal={IEEE Internet of Things Journal},   title={On the Role of Hash-Based Signatures in Quantum-Safe Internet of Things: Current Solutions and Future Directions},   year={2021},  volume={8},  number={1},  pages={1-17},  doi={10.1109/JIOT.2020.3013019}}}
 
-    % not focused on sigs
+    % not focused on sigs (width)
 
         QR IoT Breadth
         https://ieeexplore.ieee.org/abstract/document/8932459
@@ -43,14 +43,39 @@
 
 %% PQ Implementations
 
-    %% Signatures
+    %% Signatures 
 
         %%QR Sig Scheme: WALNUTDSA
         https://veridify.com/wp-content/uploads/2018/12/WP-walnutdsa-08-2018.pdf
         @misc{WalnutDSA,  author       = {IRIS ANSHEL and DEREK ATKINS and DORIAN GOLDFELD and PAUL E. GUNNELLS},  title        = {WALNUTDSATM: A QUANTUM-RESISTANT DIGITAL SIGNATURE ALGORITHM},  howpublished = {\url{https://veridify.com/wp-content/uploads/2018/12/WP-walnutdsa-08-2018.pdf}},  year         = {2018}  }}
 
 
-    @misc{PQClean-GH,
+        %%qTesla (depth)
+
+            %qTesla_masking
+            https://link.springer.com/content/pdf/10.1007%2F978-3-030-42068-0_5.pdf
+            @InProceedings{10.1007/978-3-030-42068-0_5, author="G{\'e}rard, Fran{\c{c}}ois and Rossi, M{\'e}lissa", editor="Bela{\"i}d, Sonia and G{\"u}neysu, Tim", title="An Efficient and Provable Masked Implementation of qTESLA", booktitle="Smart Card Research and Advanced Applications",year="2020",publisher="Springer International Publishing",address="Cham",pages="74--91",abstract="Now that the NIST's post-quantum cryptography competition has entered in its second phase, the time has come to focus more closely on practical aspects of the candidates. While efficient implementations of the proposed schemes are somewhat included in the submission packages, certain issues like the threat of side-channel attacks are often lightly touched upon by the authors. Hence, the community is encouraged by the NIST to join the war effort to treat those peripheral, but nonetheless crucial, topics. In this paper, we study the lattice-based signature scheme qTESLA in the context of the masking countermeasure. Continuing a line of research opened by Barthe et al. at Eurocrypt 2018 with the masking of the GLP signature scheme, we extend and modify their work to mask qTESLA. Based on the work of Migliore et al. in ACNS 2019, we slightly modify the parameters to improve the masked performance while keeping the same security. The masking can be done at any order and specialized gadgets are used to get maximal efficiency at order 1. We implemented our countermeasure in the original code of the submission and performed tests at different orders to assess the feasibility of our technique.",isbn="978-3-030-42068-0"}
+
+            %qtesla
+            https://link.springer.com/content/pdf/10.1007%2F978-3-030-57808-4_22.pdf
+            @InProceedings{10.1007/978-3-030-57808-4_22, author="Alkim, Erdem and Barreto, Paulo S. L. M. and Bindel, Nina and Kr{\"a}mer, Juliane and Longa, Patrick and Ricardini, Jefferson E.", editor="Conti, Mauro and Zhou, Jianying and Casalicchio, Emiliano and Spognardi, Angelo", title="The Lattice-Based Digital Signature Scheme qTESLA", booktitle="Applied Cryptography and Network Security", year="2020", publisher="Springer International Publishing", address="Cham", pages="441--460", abstract="We present qTESLA, a post-quantum provably-secure digital signature scheme that exhibits several attractive features such as simplicity, strong security guarantees against quantum adversaries, and built-in protection against certain side-channel and fault attacks. qTESLA---selected for round 2 of NIST's post-quantum cryptography standardization project---consolidates a series of recent schemes originating in works by Lyubashevsky, and Bai and Galbraith. We provide full-fledged, constant-time portable C implementations consisting of only about 300 lines of C code, which showcases the code compactness of the scheme. Our results also demonstrate that a conservative, provably-secure signature scheme can be efficient and practical, even with a compact and portable implementation. For instance, our C-only implementation executes signing and verification in approximately 0.9 ms on an x64 Intel processor using the proposed level 1 parameter set. Finally, we also provide AVX2-optimized assembly implementations that achieve an additional factor-1.5 speedup.", isbn="978-3-030-57808-4" }
+
+        %%Falcon (depth)
+
+            %Overview and use cases - falcon dilithium
+            https://eprint.iacr.org/2019/1276.pdf
+            %TODO
+
+            %microcontroller implementation
+            https://www.ei.ruhr-uni-bochum.de/media/seceng/veroeffentlichungen/2019/01/25/falcon_paper.pdf
+            @InProceedings{10.1007/978-3-030-25510-7_4, author="Oder, Tobias and Speith, Julian and H{\"o}ltgen, Kira and G{\"u}neysu, Tim", editor="Ding, Jintai and Steinwandt, Rainer", title="Towards Practical Microcontroller Implementation of the Signature Scheme Falcon", booktitle="Post-Quantum Cryptography", year="2019", publisher="Springer International Publishing", address="Cham", pages="65--80", abstract="The majority of submissions to NIST's recent call for Post-Quantum Cryptography are encryption schemes or key encapsulation mechanisms. Signature schemes constitute a much smaller group of submissions with only 21 proposals. In this work, we analyze the practicability of one of the latter category -- the signature scheme Falcon with respect to its suitability for embedded microcontroller platforms.", isbn="978-3-030-25510-7" }
+
+            %BEARZ vs Falcon
+            https://www.scitepress.org/Papers/2019/78348/78348.pdf
+            %TODO
+
+    (width)
+    @misc{PQClean-GH, 
         howpublished={\url{https://github.com/PQClean/PQClean}}
     }
     @misc{pq-libs:mupq,
