@@ -8,7 +8,7 @@
 \end{frame}
 
 \begin{frame}{Outline}
-  \tableofcontents
+  \tableofcontents[pausesections]
   % You might wish to add the option [pausesections]
 \end{frame}
 
@@ -31,8 +31,9 @@
     Algorithms can leverage those mechanics
     \begin{itemize}
       \item up to exponential speed up in some cases
-      \item Shors algorithm completely breaks common Encryption (like RSA, ECDSA, ..)
+      \item Shors algorithm completely breaks common Encryption 
       \begin{itemize}
+        \item everythink based on Number-Theory (like RSA, ECDSA, ..)
         \item (Qubits are currently rather unstable $\rightarrow$ not broken yet)
       \end{itemize}
     \end{itemize}
@@ -50,29 +51,87 @@
     \item FALCON (Signature)
     \end{itemize}
    
+  \item IOT also needs to be secured
+  \begin{itemize}
+    \item additional challenge of beeing low power/memory
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
 
 \section{Structure}
+\subsection{Skeleton}
 
-\begin{frame}{Planned Structure}
-
+\begin{frame}{Skeleton}
+  \begin{itemize}
+      \item Introduction
+    
+      \item Internet of Things
+      
+      \item Quantum Resistant Security
+          \begin{itemize}
+            \item Quantum Computing
+            \item QR Algorithms
+            \begin{itemize}
+              \item Encryption
+              \item Signatures
+            \end{itemize}
+          \end{itemize}
+      
+      \item QR Signatures in IoT 
+      \begin{itemize}
+        \item Failed Signatures
+        \begin{itemize}
+          \item WalnutDSA
+          \item qTESLA
+        \end{itemize}
+        \item FALCON
+      \end{itemize}
+      
+      
+      \item {Conclusion}
+  \end{itemize}
+  
 \end{frame}
 
 \subsection{Width-Covorage}
 \begin{frame}{Creating an Overview}
-
+  \begin{itemize}
+    \item Skimming multiple Quantum Resistant (QR) algorithms \cite{QR_algs,PQClean-GH} that focus on IoT \cite{QR_comparison,Energy_comp,QR_Iot_Lattice,QR_IoT,QR_IoT_Energy} 
+    \item Deeper reserach about signature Schemes \cite{QR_sigs}
+    \item and having a slightly more detailed look at two failed sschemes \cite{WalnutDSA,WalnutDSA_broken,qtesla,qtesla_masked}
+    
+  \end{itemize}
 \end{frame}
 
 \subsection{Depth-Covorage}
 \begin{frame}{Diving Deeper}
+  \begin{itemize}
+    \item  having a deeper look at a NIST QR finalist with the most compact implementation:
 
+    FALCON \cite{falcon_and_dilithium,falcon_micro_impl,bearz}
+   
+    \item  maybe having an outlook in the end on a Hardware-Accelerated QR chip \cite{IoT_ASIC} 
+  \end{itemize}
+
+\end{frame}
+
+\subsection{Ressources}
+\begin{frame}[allowframebreaks]{Ressources}
+  \bibliographystyle{plain}
+  \bibliography{../lit}
 \end{frame}
 
 \subsection{Schedule}
 \begin{frame}{Planned Schedule}
-
+\begin{itemize}
+  \item 7.5. : skim breadth coverage literature
+  \item 15.5.: write until signatures (at least bullet point comments)
+  \item 30.5.: finish breadth (at least bullet point comments)
+  \item $\alpha$: skim and bullet point Depth
+  \item 30.6.: finish
+\end{itemize}
 \end{frame}
 
 \end{document}
+
