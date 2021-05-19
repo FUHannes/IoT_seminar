@@ -33,7 +33,7 @@ Internet of Things, Quantum Resistance, Secure Signatures, Power Constraint Devi
 
 \section{Introduction}
 The quantum revolution is coming. With quantum computers\footnote{compare section \ref{quantum computing}} on the way to get more and more functional, people are fearing a loss of their security and privacy.
-That is because there are algorithms based on Shors algorithm that can forge signatures and decrypt encrypted messages whos security is based on number theory problems.
+That is because there are algorithms based on Shors algorithm that can forge signatures and decrypt encrypted messages whos security is based on discrete logarithms, including elliptic curves or prime factoriztion, like our most common schemes ECDSA and RSA respectively are.
 The quantum computer only needs access to the public keys of these asymetric schemes.
 The expenditure to forge a signature\footnote{that is considered secure under normal circumstances 
 %TODO: more precise? Unforgeablu under chosen blabla
@@ -68,7 +68,14 @@ Which is more than other compareable devices but way less then a lower spec mode
 
 \section{Quantum Resistant Security}
 \subsection{Quantum Computing}\label{quantum computing}
+In contrast to classical computers, where information is processed in discete states, a quantum computer leverages quantum mechanics to operate on so-called qubits - quantum objects that can be in superposition or entangled with each other. 
+Opening a new kind of computing. 
+One of implications of that is, that it is now possible to factor large numbers in polynomial time \cite{Shor} \footnote{Shors algorithm uses a so-called Quantum-Fourier-Transform (QFT) to (probablisticly) get the frequencys of which a given function output occurs. That can be used together with euclids algorithm of finding the greatest common devisor to derive the prime factors}. 
+Prior to to quantum computers this was considered a hard problem that could only be computed in exponential time and was therefor considered practically impossible and was used as the basis-problem for RSA encryption.
+Similar to that other common schemes like ECDSA can also be broken be slightly modidied versions of Shors Algorithm.
 \subsection{QR Algorithms}
+The two main algorithms with practical use cases that have a great speed-up compared to classical solutions, are the already introduced algorithm by Shor and an algorithm by Grover taht can essentially reverse one-way functions.
+While Shors algorithm provides exponential speed-up Grovers algorithm 
 \subsubsection{Encryption}
 \subsubsection{Signatures} 
 \subsubsection{Performance Metrics}
@@ -84,5 +91,6 @@ Which is more than other compareable devices but way less then a lower spec mode
 
 \bibliographystyle{IEEEtran}
 \bibliography{lit.bib}
+\bibliography{lit_specific.bib}
 
 \end{document}
