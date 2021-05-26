@@ -81,13 +81,25 @@ The quadratic speedup provided by quantum computers can easily be mitigated by d
 On the other hand though, classical asymetric cryptography is endangered by shors algorithm and quantum computers.
 
 But not all asymetric cryptography schemes are equally affected.
-There are different proposals, both for encryption and for signature schemes.
-\subsubsection{Encryption}
-\subsubsection{Signatures} 
+There are different proposals, both for QR encryption and for QR signature schemes.
+They all do have in common though, that their security is not absolutely mathematically prooven, but based upon assumptions.
+We therefor need to consider a few measures that make schmemes more or less secure.
 \subsubsection{Performance Metrics}
+Some performance metrics exist in QR schemes as well as in classic schemes.
+Keylength and
+key exchange message length \cite{QR_algs} are the more obvious ones.
+The computing time also comes to mind as a perfomance metric. Here you need to differentiate between key generation, which is less important, since it should only occur rarely, and signing as well as signature verification \footnote{as well as its counterparts de- and encryption}.
+
+
+\subsubsection{Encryption}
+
+\subsubsection{Signatures} 
 
 \section{QR Signatures in IoT}
 \subsubsection{Performance Metrics in IoT}
+- key/ exchange message/ signature size 
+    - cache/ ram usage
+
 \subsection{Failed Signatures}
 \subsubsection{WalnutDSA}
 \subsubsection{qTESLA}
