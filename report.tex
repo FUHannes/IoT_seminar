@@ -112,11 +112,13 @@ hash based or lattice based:
     Encryption : - vulnerable to CCA , lattice reduction techniques - padding scheme [30] , longer keys \cite{QR_algs}
     Signatures : - map message to vector, sign by solving (CVP) - leaks information about PrivK - broken after 400messages - dont give closest vektor but a close enough one - secure for 1 mrd (billion) sigs (still adviced to swap after 10mil)
 
-- McEliece decrypt padded message digest - try thousands of paddings - signing takes 30seks, 4mb sig-size -not feasbale
+- McEliece decrypt padded message digest - try thousands of paddings - signing takes 30seks, 4mb priv/pub KEY-size -not feasbale
 \section{QR Signatures in IoT}
 \subsubsection{Performance Metrics in IoT}
 - key/ exchange message/ signature size 
     - cache/ ram usage
+    
+- setup(ms)  lifetime, pubk size, privk size, sig
 
 \subsection{Failed Signatures}
 \subsubsection{WalnutDSA}
