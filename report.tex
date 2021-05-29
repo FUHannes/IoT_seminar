@@ -90,11 +90,29 @@ Keylength and
 key exchange message length \cite{QR_algs} are the more obvious ones.
 The computing time also comes to mind as a perfomance metric. Here you need to differentiate between key generation, which is less important, since it should only occur rarely, and signing as well as signature verification \footnote{as well as its counterparts de- and encryption}.
 
+Primarely in signatures another metric arises: how often can a private key be used before it needs to be switched out for another one, because the signature leaked information of the key.
+This is not particularly relevant in most cases, as methods can be used to create long term procedures from short term procedures (those where a key can rarely, if ever, be recycled).
+But it is relevant in the case of the IoT, since those methods require extra memory which is sparse in IoT-devices. Adiitionally they tend to make the signatures themself longer, which also is not preferrable in the IoT. \cite{QR_algs}
 
 \subsubsection{Encryption}
+knapsack problem - broken
+''
+conjugacy search problem and related problems in braid groups, and the problem of solving
+multivariate systems of polynomials in finite fields
+'' also mostly broken or badly understood \cite{QR_algs}
+
+code based:
+- McEliece Error correction codes transformed - secure and fast (100micros) but keys are k*n matrices : millions of bits \cite{QR_algs} - not feasable 
 
 \subsubsection{Signatures} 
+hash based or lattice based:
+- lamport OT signature \cite{QR_algs} (as the name implies only useable one time - useless ; can precompute a bunch that are verifiable with the same pubk - useless since rare storage)
+- lattice based signatures (high-d basis find shortest vector (SVP) or closest lattice vector to arbitrary point (CVP)) require megabits of basis - unfeasable NTRU reduce to kilobits by introducing symetry \cite{QR_algs}
+    -10-100* faster than conventional crypto
+    Encryption : - vulnerable to CCA , lattice reduction techniques - padding scheme [30] , longer keys \cite{QR_algs}
+    Signatures : - map message to vector, sign by solving (CVP) - leaks information about PrivK - broken after 400messages - dont give closest vektor but a close enough one - secure for 1 mrd (billion) sigs (still adviced to swap after 10mil)
 
+- McEliece decrypt padded message digest - try thousands of paddings - signing takes 30seks, 4mb sig-size -not feasbale
 \section{QR Signatures in IoT}
 \subsubsection{Performance Metrics in IoT}
 - key/ exchange message/ signature size 
