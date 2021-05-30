@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\newcommand{\comment}[1]{}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
@@ -58,6 +59,10 @@ And finally focussing on the best signature contenter for the IoT so far: FALCON
 
 % TODO ? Background section to put this in?
 \section{Internet of Things}
+\comment{ %%%%%%%% NOTES %%%%%%%%%%%
+- growing: over 3 billion rn \cite{QR_IoT}
+} %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
+
 %discussion what the boundries of iot compare different devices from linux devices rPI over 32bit Arm based processors with RTOS to 8bit microcontrollers like arduino/atmega
 The IoT consists of devices of all sorts, having in common, that they communicate with each other and the enviroment rather than directly with humans.
 Those devices range from automatic lights and smart home devices to tiny interconnected sensors in automatic fabrication.
@@ -95,37 +100,61 @@ This is not particularly relevant in most cases, as methods can be used to creat
 But it is relevant in the case of the IoT, since those methods require extra memory which is sparse in IoT-devices. Adiitionally they tend to make the signatures themself longer, which also is not preferrable in the IoT. \cite{QR_algs}
 
 \subsubsection{Encryption}
+\comment{ %%%%%%%% NOTES %%%%%%%%%%%
 knapsack problem - broken
 ''
 conjugacy search problem and related problems in braid groups, and the problem of solving
 multivariate systems of polynomials in finite fields
 '' also mostly broken or badly understood \cite{QR_algs}
 
+lattice based:
+- NTRUEncrypt (compare sigs)
 code based:
 - McEliece Error correction codes transformed - secure and fast (100micros) but keys are k*n matrices : millions of bits \cite{QR_algs} - not feasable 
 
+} %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
+
 \subsubsection{Signatures} 
+\comment{ %%%%%%%% NOTES %%%%%%%%%%%
 hash based or lattice based:
+- hash: XMSS, SPHINCS \cite{QR_IoT}
 - lamport OT signature \cite{QR_algs} (as the name implies only useable one time - useless ; can precompute a bunch that are verifiable with the same pubk - useless since rare storage)
 - lattice based signatures (high-d basis find shortest vector (SVP) or closest lattice vector to arbitrary point (CVP)) require megabits of basis - unfeasable NTRU reduce to kilobits by introducing symetry \cite{QR_algs}
     -10-100* faster than conventional crypto
     Encryption : - vulnerable to CCA , lattice reduction techniques - padding scheme [30] , longer keys \cite{QR_algs}
-    Signatures : - map message to vector, sign by solving (CVP) - leaks information about PrivK - broken after 400messages - dont give closest vektor but a close enough one - secure for 1 mrd (billion) sigs (still adviced to swap after 10mil)
+    Signatures : - map message to vector, sign by solving (CVP) - leaks information about PrivK - broken after 400messages - dont give closest vektor but a close enough one - secure for 1 mrd (billion) sigs (still adviced to swap after 10mil) (okayish iniot since not so many massages)
+    - proposals (2017: GPV, GLP, BLISS \cite{QR_IoT})
 
 - McEliece decrypt padded message digest - try thousands of paddings - signing takes 30seks, 4mb priv/pub KEY-size -not feasbale
+} %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
+
 \section{QR Signatures in IoT}
+\comment{ %%%%%%%% NOTES %%%%%%%%%%%
+} %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 \subsubsection{Performance Metrics in IoT}
+\comment{ %%%%%%%% NOTES %%%%%%%%%%%
 - key/ exchange message/ signature size 
-    - cache/ ram usage
-    
+- cache/ ram usage
+
 - setup(ms)  lifetime, pubk size, privk size, sig
+} %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
 \subsection{Failed Signatures}
+\comment{ %%%%%%%% NOTES %%%%%%%%%%%
+} %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 \subsubsection{WalnutDSA}
+\comment{ %%%%%%%% NOTES %%%%%%%%%%%
+} %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 \subsubsection{qTESLA}
+\comment{ %%%%%%%% NOTES %%%%%%%%%%%
+} %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 \subsection{FALCON}
+\comment{ %%%%%%%% NOTES %%%%%%%%%%%
+} %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
 \section{Conclusion}
+\comment{ %%%%%%%% NOTES %%%%%%%%%%%
+} %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
 \bibliographystyle{IEEEtran}
 \bibliography{lit.bib, lit_specific.bib}
