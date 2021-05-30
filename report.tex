@@ -90,6 +90,10 @@ There are different proposals, both for QR encryption and for QR signature schem
 They all do have in common though, that their security is not absolutely mathematically prooven, but based upon assumptions.
 We therefor need to consider a few measures that make schmemes more or less secure.
 \subsubsection{Performance Metrics}
+\comment{ %%%%%%%% NOTES %%%%%%%%%%%
+- Security Level (1-5, AES-128, SHA256, AES-192, SHA384, AES-256) \cite{QR_Iot_Lattice}([7])
+} %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
+
 Some performance metrics exist in QR schemes as well as in classic schemes.
 Keylength and
 key exchange message length \cite{QR_algs} are the more obvious ones.
@@ -130,6 +134,19 @@ hash based or lattice based:
 
 \section{QR Signatures in IoT}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
+Stack usage:
+    name        & KeyGen    & Sign  & Verify
+    Dilithium-3 & 50k       & 86k   & 54k
+    qTESLA-1    & 22k       & 29k   & 23k
+    qTESLA-3    & 43k       & 28k   & 45k
+    Falcon-5    & 120k      & 120k  & 120k
+
+Clock cycles (10mil ~ 60ms (ARM M4 (168Mhz))):
+    name        & KeyGen    & Sign  & Verify
+    Dilithium-3 & 2.3m      & 8.3m  & 2.3m
+    Falcon-5    & 365m      & 165m  & 1m
+    qTESLA-3    & 30m       & 11m   & 2.2m
+    \cite{QR_Iot_Lattice}
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 \subsubsection{Performance Metrics in IoT}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
@@ -137,6 +154,10 @@ hash based or lattice based:
 - cache/ ram usage
 
 - setup(ms)  lifetime, pubk size, privk size, sig
+
+'' small sized public key, small digital 
+signature and a range of supported hash output sizes is 
+recommended''\cite{QR_Iot_Lattice}
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
 \subsection{Failed Signatures}
