@@ -92,6 +92,7 @@ We therefor need to consider a few measures that make schmemes more or less secu
 \subsubsection{Performance Metrics}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 - Security Level (1-5, AES-128, SHA256, AES-192, SHA384, AES-256) \cite{QR_Iot_Lattice}([7])
+- no standard benchmark for quantum resistance \cite{QR_comparison} (nist levels 1-5)
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
 Some performance metrics exist in QR schemes as well as in classic schemes.
@@ -115,7 +116,13 @@ lattice based:
 - NTRUEncrypt (compare sigs)
 code based:
 - McEliece Error correction codes transformed - secure and fast (100micros) but keys are k*n matrices : millions of bits \cite{QR_algs} - not feasable 
+multivariate-based: decryption inefficent (''guess work'') \cite{QR_comparison}
+- Rainbow gigantic 22kbyte pubk
+Supersingular EC:
+not much in use and not super researched , one impl (SIKE) \cite{QR_comparison}
+Mixed schemes for backwards comp: neither fully safe nor efficent since 2 schemes need to be saved on device \cite{QR_comparison}
 
+mostly code/lattice based implementations \cite{QR_comparison}
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
 \subsubsection{Signatures} 
@@ -123,7 +130,7 @@ code based:
 hash based or lattice based:
 - hash: XMSS, SPHINCS \cite{QR_IoT}
 - lamport OT signature \cite{QR_algs} (as the name implies only useable one time - useless ; can precompute a bunch that are verifiable with the same pubk - useless since rare storage)
-- lattice based signatures (high-d basis find shortest vector (SVP) or closest lattice vector to arbitrary point (CVP)) require megabits of basis - unfeasable NTRU reduce to kilobits by introducing symetry \cite{QR_algs}
+- lattice based signatures (high-d basis find shortest vector (SVP) or closest lattice vector to arbitrary point (CVP)) require megabits of basis - unfeasable NTRU reduce to kilobits by introducing symetry \cite{QR_algs,QR_comparison}
     -10-100* faster than conventional crypto
     Encryption : - vulnerable to CCA , lattice reduction techniques - padding scheme [30] , longer keys \cite{QR_algs}
     Signatures : - map message to vector, sign by solving (CVP) - leaks information about PrivK - broken after 400messages - dont give closest vektor but a close enough one - secure for 1 mrd (billion) sigs (still adviced to swap after 10mil) (okayish iniot since not so many massages)
@@ -147,7 +154,12 @@ Clock cycles (10mil ~ 60ms (ARM M4 (168Mhz))):
     Falcon-5    & 365m      & 165m  & 1m
     qTESLA-3    & 30m       & 11m   & 2.2m
     \cite{QR_Iot_Lattice}
+
+Hash-Based Sphincs promising since stateless, but many parameters to set \cite{QR_IoT_Energy}
+
+as of \cite{QR_comparison} only schemes (out of ~50) with < 4kbit: SIKE and Round5 
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
+
 \subsubsection{Performance Metrics in IoT}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 - key/ exchange message/ signature size 
@@ -158,23 +170,36 @@ Clock cycles (10mil ~ 60ms (ARM M4 (168Mhz))):
 '' small sized public key, small digital 
 signature and a range of supported hash output sizes is 
 recommended''\cite{QR_Iot_Lattice}
+
+- most impls have quite large keys \cite{QR_comparison}
+- key gen performance since many schemes have limited signatures \cite{QR_comparison}
+
+- IoT evolves, when fast quantum is available iot will be better too  \cite{QR_comparison}
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
 \subsection{Failed Signatures}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
+
 \subsubsection{WalnutDSA}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
+
 \subsubsection{qTESLA}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
+
 \subsection{FALCON}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
+
 \section{Conclusion}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
+- quantum fast evolving, active field of research
+- smart home, smart campus, smart city
+- quantum key distribution
+\cite{QR_comparison}
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
 \bibliographystyle{IEEEtran}
