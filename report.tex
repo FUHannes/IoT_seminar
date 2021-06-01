@@ -91,7 +91,7 @@ They all do have in common though, that their security is not absolutely mathema
 We therefor need to consider a few measures that make schmemes more or less secure.
 \subsubsection{Performance Metrics}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
-- Security Level (1-5, AES-128, SHA256, AES-192, SHA384, AES-256) \cite{QR_Iot_Lattice}([7])
+- Security Level (1-5, AES-128, SHA256, AES-192, SHA384, AES-256) \cite{QR_Iot_Lattice,Energy_comp}([7]) determined via grovers alg
 - no standard benchmark for quantum resistance \cite{QR_comparison} (nist levels 1-5)
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
@@ -151,6 +151,7 @@ Stack usage:
 Clock cycles (10mil ~ 60ms (ARM M4 (168Mhz))):
     name        & KeyGen    & Sign  & Verify
     Dilithium-3 & 2.3m      & 8.3m  & 2.3m
+    Dilithium-3 & 2.1       & 7.2   & 2.1 \cite{Energy_comp}
     Falcon-5    & 365m      & 165m  & 1m
     qTESLA-3    & 30m       & 11m   & 2.2m
     \cite{QR_Iot_Lattice}
@@ -191,6 +192,17 @@ recommended''\cite{QR_Iot_Lattice}
 
 \subsection{FALCON}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
+falcon-512 (L1):
+pubk/sig 897/690 bytes (dil3: 1472/2701 ecdsa: 64)
+keygen: 182m clk , 118mJ (dil3: 2.3m / 1.7mJ ecdsa 5mJ)
+sign/ver: 23.5/0.345 mJ (dil3 5mJ/1.7mJ ecdsa 4mJ)
+
+falcon-1024 (L5):
+pubk/sig 1793/1330 bytes
+keygen: 380m clk , 232mJ
+sign/ver: 45.5/0.69 mJ
+\cite{Energy_comp}
+
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
 
