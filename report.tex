@@ -34,6 +34,10 @@ Internet of Things, Quantum Resistance, Secure Signatures, Power Constraint Devi
 %TODO 12 Seiten
 
 \section{Introduction}
+\comment{ %%%%%%%% NOTES %%%%%%%%%%%
+„principles of data integrity, message authentication, and nonrepudiation, are going to have profound aftermath on sensory data in terms of security and privacy.“ \cite{QR_sigs}
+} %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
+
 The quantum revolution is coming. With quantum computers\footnote{compare section \ref{quantum_computing}} on the way to get more and more functional, people are fearing a loss of their security and privacy.
 That is because there are algorithms based on Shors algorithm that can forge signatures and decrypt encrypted messages whos security is based on discrete logarithms, including elliptic curves or prime factoriztion, like our most common schemes ECDSA and RSA respectively are.
 The quantum computer only needs access to the public keys of these asymetric schemes.
@@ -127,6 +131,15 @@ mostly code/lattice based implementations \cite{QR_comparison}
 
 \subsubsection{Signatures} 
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
+
+Signatures classify as
+- Hash based
+- Lattice based
+- Multivariate polynomial based
+- Code based
+- Super-singular sogen based
+\cite{QR_sigs}
+
 hash based or lattice based:
 - hash: XMSS, SPHINCS \cite{QR_IoT}
 - lamport OT signature \cite{QR_algs} (as the name implies only useable one time - useless ; can precompute a bunch that are verifiable with the same pubk - useless since rare storage)
@@ -136,6 +149,33 @@ hash based or lattice based:
     Signatures : - map message to vector, sign by solving (CVP) - leaks information about PrivK - broken after 400messages - dont give closest vektor but a close enough one - secure for 1 mrd (billion) sigs (still adviced to swap after 10mil) (okayish iniot since not so many massages)
     - proposals (2017: GPV, GLP, BLISS \cite{QR_IoT})
 
+HBS vs Lattice:
+    - SPHINCS (HBS) (intel XEON (wtf?!))
+        - sign: 50mil clock cycles 
+        - Ver: 1.6mil
+        - Key-size: pub 1 ; private 1
+        - Sig size: 41KB
+    - BLISS (lattice) (arm M4)
+        - 5.9mil
+        - 1mil
+        - 7; 2 (hm ouf)
+        - 0.96
+
+	HBS is well studied/understood/practiced lattice not and vulnerabilities discovered one after the other
+
+	Stateful (wOTS, XMSS, LMS ..)
+		„stateful digital signature scheme necessitates the main- tenance of the updated nonrepeated secret key upon each signature generation process. It is essential to keep track of nonrepeated key pairs, failing which will result in the degra- dation of the security of the cryptographic scheme“ ..sounds kinda whack to me
+
+		MSS stores only prng seed and uses merkle trees -> managing state (used keys) on other side (because reusing key is imperative to security)
+
+	Stateless(Sphincs)
+		more expensive sig gen , since key pairs used in random order - BDS optimization no longer applicable
+
+	Stateful if performance time and processor constrained, Stateless if energy/memory constrained
+\cite{QR_sigs}
+
+
+ code-based:   
 - McEliece decrypt padded message digest - try thousands of paddings - signing takes 30seks, 4mb priv/pub KEY-size -not feasbale
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
@@ -171,6 +211,11 @@ as of \cite{QR_comparison} only schemes (out of ~50) with < 4kbit: SIKE and Roun
 '' small sized public key, small digital 
 signature and a range of supported hash output sizes is 
 recommended''\cite{QR_Iot_Lattice}
+
+- Stateful/less
+- „signature and/or key sizes to running times and memory consumption to energy consumption „
+- „From the software benchmark perspec- tive, the runtime of key generation, signing, and verification processes whereas from the hardware perspective, CPU cycles, key size, signature size, and energy consumption are among the targeted evaluation metrics. In general, the parameter sets are highly dependent on the underlying construction of a particular scheme.“
+\cite{QR_sigs}
 
 - most impls have quite large keys \cite{QR_comparison}
 - key gen performance since many schemes have limited signatures \cite{QR_comparison}
@@ -208,6 +253,7 @@ sign/ver: 45.5/0.69 mJ
 
 \section{Conclusion}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
+- of course no protection against side channel etc 
 - quantum fast evolving, active field of research
 - smart home, smart campus, smart city
 - quantum key distribution
