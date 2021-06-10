@@ -34,11 +34,12 @@ Internet of Things, Quantum Resistance, Secure Signatures, Power Constraint Devi
 %TODO 12 Seiten
 
 \section{Introduction}
+% TODO : already distinguish between : hashing, encryption (symmetric/asymmetric), signatures
 The quantum revolution is coming. With quantum computers\footnote{compare section \ref{quantum_computing}} on the way to get more and more functional, people are fearing a loss of their security and privacy.
 That is because there are algorithms based on Shors algorithm that can forge signatures and decrypt encrypted messages whos security is based on discrete logarithms, including elliptic curves or prime factoriztion, like our most common schemes ECDSA and RSA respectively are.
 The quantum computer only needs access to the public keys of these asymetric schemes.
 The expenditure to forge a signature\footnote{that is considered secure under normal circumstances 
-%TODO: more precise? Unforgeablu under chosen blabla
+%noTODO: more precise? Unforgeablu under chosen blabla
 } with classic\footnote{we refer to classic if something is not directly leveraging entanglement or superposition} computers rises exponentially with increased key length, therefor beeing essentially unbreakable by classic computers.
 A sufficient quantum computer on the other hand can derive a private key from a public key in polynomial time, therefor rendering these schemes broken.
 
@@ -57,7 +58,7 @@ With a little more details about two failed signature schmemes to highlight pote
 And finally focussing on the best signature contenter for the IoT so far: FALCON.
 
 
-% TODO ? Background section to put this in?
+% noTODO ? Background section to put this in?
 \section{Internet of Things}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 - growing: over 3 billion rn \cite{QR_IoT}
@@ -73,6 +74,7 @@ Which is more than other compareable devices but way less then a lower spec mode
 
 
 \section{Quantum Resistant Security}
+% TODO : Reference Shor and Grover
 \subsection{Quantum Computing}\label{quantum_computing}
 In contrast to classical computers, where information is processed in discete states, a quantum computer leverages quantum mechanics to operate on so-called qubits - quantum objects that can be in superposition or entangled with each other. 
 Opening a new kind of computing. 
