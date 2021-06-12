@@ -58,14 +58,26 @@ Therefor i am going to give a small introduction and background to quantum compu
 In the next section i will give an overview over current candidates for Quantum Resistant (QR) Algorithms and giving performance metrics for those.
 The following chapter will then focus on signature schemes in the IoT, starting with additional performance metrics relevant in the IoT.
 With a little more details about two failed signature schmemes to highlight potetial pitfalls. 
-And finally focussing on the best signature contenter for the IoT so far: FALCON.
+And finally focussing on the best signature contender for the IoT so far: FALCON.
 
-\section{Cryptography}
-% TODO : already distinguish between : hashing, encryption (symmetric/asymmetric), signatures
-Loosely speaking the main topic of cryptography can be devided 
+\section{Background}
+\subsection{Cryptography}
+% done : already distinguish between : hashing, encryption (symmetric/asymmetric), signatures
+Loosely speaking the main topic of cryptography can be devided into three groups.
+The first of these groups is about one way functions, that shall not, as the name implies, be effeciently reverseable.
+If we create a smaller value of constant length from a bigger set of possibly variable length, we commonly refer to that as hashing.
+Cryptographic hashing is important for a variety of different applications like storing and matching passwords without the ability to infer any knowledge about that password.
+Hashing itself can be used for the next pillar of cryptography: signatures.
+Signature shemes are used to proof integrety or authenticity of any data.
+A signature scheme conisists of two parts, signing and verifying. 
+The last group is encryption, which ensures privacy/confidentiality of any data, s.t. only the right entities can decrypt this data.
+These shemes consist of the two parts encryption and decryption.
+Additionally to those parts for signatures as well as encryption there needs to be process of key-generation.
+We also differentiate between symetric and asymetric schemes. The first one has a different private and public key while the latter uses the same for de- and encryption.
+You will see which of those schemes will be more or less endangered by quantum computing in section \ref{quantum_computing}.
 
 % noTODO ? Background section to put this in?
-\section{Internet of Things}
+\subsection{Internet of Things}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 - growing: over 3 billion rn \cite{QR_IoT}
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
