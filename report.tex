@@ -164,28 +164,46 @@ Those classes can be seen in table \ref{QR-classes}
 
 \subsubsection{Encryption}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
-knapsack problem - broken
-''
-conjugacy search problem and related problems in braid groups, and the problem of solving
-multivariate systems of polynomials in finite fields
-'' also mostly broken or badly understood \cite{QR_algs}
+%done:
+    knapsack problem - broken
+    ''
+    conjugacy search problem and related problems in braid groups, and the problem of solving
+    multivariate systems of polynomials in finite fields
+    '' also mostly broken or badly understood \cite{QR_algs}
 
-lattice based:
-- NTRUEncrypt (compare sigs)
-code based:
-- McEliece Error correction codes transformed - secure and fast (100micros) but keys are k*n matrices : millions of bits \cite{QR_algs} - not feasable 
-multivariate-based: decryption inefficent (''guess work'') \cite{QR_comparison}
-- Rainbow gigantic 22kbyte pubk
-Supersingular EC:
-not much in use and not super researched , one impl (SIKE) \cite{QR_comparison}
-Mixed schemes for backwards comp: neither fully safe nor efficent since 2 schemes need to be saved on device \cite{QR_comparison}
+    lattice based:
+    - NTRUEncrypt (compare sigs)
+    code based:
+    - McEliece Error correction codes transformed - secure and fast (100micros) but keys are k*n matrices : millions of bits \cite{QR_algs} - not feasable 
+    multivariate-based: decryption inefficent (''guess work'') \cite{QR_comparison}
+    - Rainbow gigantic 22kbyte pubk
+    Supersingular EC:
+    not much in use and not super researched , one impl (SIKE) \cite{QR_comparison}
+    Mixed schemes for backwards comp: neither fully safe nor efficent since 2 schemes need to be saved on device \cite{QR_comparison}
 
 mostly code/lattice based implementations \cite{QR_comparison}
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
+QR encryption schemes can be based upon a multitude of different mathematical problems thought to be hard even for quantum computers.
 
+Sadly, beeing thought of as secure mostly isnt based upon actual rigorous proof but assumptions.
+Therefor one problem that was used as a asymetric encryption basis, the knapsack problem, was broken soon after its introduction by so-called approximate lattice reduction attacks \cite{QR_algs}.
 
+Later iterations which include ``conjugacy search problem and related problems in braid groups, and the problem of solving
+multivariate systems of polynomials in finite fields''\cite{QR_algs} have been under active research with the latter beeing broken after standarization and implementation \cite{QR_algs}.
 
-\subsubsection{Signatures} 
+Nevertheless there is an implementation of a multivariate-based scheme, called Rainbow, that is also currently a contender for standarization. But as an encryption scheme its not very suitable since the process of decrypting in multivariate based schemes requires some guessing work \cite{QR_comparison} which is essentially bad in IoT enviroments.
+An additional problem that would make rainbow unsuiteable for IoT use-cases is its big 22kB public key. While private keys can rather easily be shrunk in key-generation through help of a pseudo-random-generator, thats generally not the case for large public keys.
+
+On the other hand we have a problem that is not yet very well reasearched and also not much in use, but has one implementation called SIKE. This problem is based upon Supersingular elliptic Curves, which are itself a modification of elliptic curve problems that should make it quantum resistant. But since this topic isnt well-studied yet we are mostly left with Schmes based upon the following two thought-to-be quantum-hard problems.
+
+The first one is so called code-based cryptography. Here the decoder has to correct errors of data that has been seemingly randomly shuffled, but only those with access to the private key can easily `unshuffle' the data to then use special error correction codes. 
+The most researched one is called McEliece and even has quite fast ($100 \mu s$) and secure implementations. 
+The main problem is, that the `shuffling' is realized through $k*n$ matrices that are generally big (millions of bits) and therefor unfeasable for constrained IoT devices.
+
+The second one will be discussed in greater detail in section \ref{QR signatures}, since it is also used as one of the main problems for signature schemes.
+Those schemes are called lattice based and also have some implementation with the most famous for encryption beeing NTRUEncrypt.
+
+\subsubsection{Signatures} \label{QR signatures}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 
 Signatures classify as
