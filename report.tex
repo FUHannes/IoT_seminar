@@ -38,7 +38,8 @@ Internet of Things, Quantum Resistance, Secure Signatures, Power Constraint Devi
 „principles of data integrity, message authentication, and nonrepudiation, are going to have profound aftermath on sensory data in terms of security and privacy.“ \cite{QR_sigs}
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
-The quantum revolution is coming. With quantum computers\footnote{compare section \ref{quantum_computing}} on the way to get more and more functional, people are fearing a loss of their security and privacy.
+The quantum revolution is coming. With quantum computers\footnote{compare section \ref{l:quantum_computing}} on the way to get more and more functional, people are fearing a loss of their security and privacy.
+Or as \cite{QR_sigs} puts it, ``principles of data integrity, message authentication, and nonrepudiation, are going to have profound aftermath on sensory data in terms of security and privacy.''
 That is because there are algorithms based on Shors algorithm that can forge signatures and decrypt encrypted messages whos security is based on discrete logarithms, including elliptic curves or prime factoriztion, like our most common schemes ECDSA and RSA respectively are.
 The quantum computer only needs access to the public keys of these asymetric schemes.
 The expenditure to forge a signature\footnote{that is considered secure under normal circumstances 
@@ -74,7 +75,7 @@ The last group is encryption, which ensures privacy/confidentiality of any data,
 These shemes consist of the two parts encryption and decryption.
 Additionally to those parts for signatures as well as encryption there needs to be process of key-generation.
 We also differentiate between symetric and asymetric schemes. The first one has a different private and public key while the latter uses the same for de- and encryption.
-You will see which of those schemes will be more or less endangered by quantum computing in section \ref{quantum_computing}.
+More details about which of those schemes will be more or less endangered by quantum computing are in section \ref{l:quantum_computing} and \ref{l:qr-algs}.
 
 % noTODO ? Background section to put this in?
 \subsection{Internet of Things}
@@ -90,31 +91,35 @@ A popular example for hobbiest IoT devices is the ESP32 from Espressif Microsyst
 They offer multiple Modules with up to 240Mhz Clock on the 32 IC, up to 16MiB Flash Storage and 320KiB RAM.
 Which is more than other compareable devices but way less then a lower spec modern smartphone, with 10 times the frequency, 4GB of RAM and 64GB of storage.
 
-Since the IoT consists of very different types of constrained nodes the IETF introduced different classes on which to classify IoT nodes:\\
-\vspace{.1 cm}
-\begin{tabular}{l | c c}
-    Class & RAM & Flash \\
-    \hline
-    C0 & $<<$ 10 KiB & $<<$ 100 KiB\\
-    C1 & ~ 10 KiB & ~ 100 KiB\\
-    C2 & ~ 50 KiB & ~ 250 KiB\\
-    
-\end{tabular}
-\vspace{.1 cm}
+Since the IoT consists of very different types of constrained nodes the IETF introduced different classes on which to classify IoT nodes, those can be seen in table \ref{classes}
+
+\begin{table}
+    \label{classes}
+    \caption{IETF IoT Classes}
+    \begin{tabular}{l | c c}
+        Class & RAM & Flash \\
+        \hline
+        C0 & $<<$ 10 KiB & $<<$ 100 KiB\\
+        C1 & ~ 10 KiB & ~ 100 KiB\\
+        C2 & ~ 50 KiB & ~ 250 KiB\\
+    \end{tabular} 
+\end{table}
+
 
 
 \section{Quantum Resistant Security}
-% TODO : Reference Shor and Grover
-\subsection{Quantum Computing}\label{quantum_computing}
+% XXX : more details about Shor and Grover
+\subsection{Quantum Computing}\label{l:quantum_computing}
 In contrast to classical computers, where information is processed in discete states, a quantum computer leverages quantum mechanics to operate on so-called qubits - quantum objects that can be in superposition or entangled with each other. 
 Opening a new kind of computing. 
 One of the implications of that is, that it is now possible to factor large numbers in polynomial time using an algorithm deverloped by Shor \cite{Shor}. 
 This algorithm uses a so-called Quantum-Fourier-Transform (QFT) to (probablisticly) get the frequencys of which a given function output occurs. That can be used together with euclids algorithm of finding the greatest common devisor to derive the prime factors. 
 Prior to to quantum computers this was considered a hard problem that could only be computed in exponential time and was therefor considered practically impossible and was used as the basis-problem for RSA encryption.
 Similar to that other common schemes like ECDSA can also be broken be slightly modidied versions of Shors Algorithm.
-\subsection{QR Algorithms}
-The two main algorithms with practical use cases that have a great speed-up compared to classical solutions, are the already introduced algorithm by Shor and an algorithm by Grover taht can essentially reverse one-way functions.
-While Shors algorithm provides exponential speed-up Grovers algorithm only provides quadratic speed up. It was also shown, that something similar to grovers algorithm but with exponential speedup is impossible \cite{Strengths&Weaknesses_QC}. Which implies that Hashing as well as symetric cryptography stays relatively secure.
+\subsection{QR Algorithms}\label{l:qr-algs}
+The two main algorithms with practical use cases that have a great speed-up compared to classical solutions, are the already introduced algorithm by Shor and an algorithm by Grover that can essentially reverses one-way functions by creating a superposition over all possible inputs, flipping all inputs with the wanted output (without knowing the inputs) and then flipping this state about its mean and repeating this process a lot of times \cite{Grover}.
+While Shors algorithm provides exponential speed-up, Grovers algorithm only provides quadratic speed-up. It was also shown, that something similar to grovers algorithm but with exponential speedup is impossible \cite{Strengths&Weaknesses_QC}. 
+Which implies that Hashing as well as symetric cryptography stays relatively secure.
 The quadratic speedup provided by quantum computers can easily be mitigated by doubling the key length.
 On the other hand though, classical asymetric cryptography is endangered by shors algorithm and quantum computers.
 
