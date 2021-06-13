@@ -35,7 +35,8 @@ Internet of Things, Quantum Resistance, Secure Signatures, Power Constraint Devi
 
 \section{Introduction}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
-„principles of data integrity, message authentication, and nonrepudiation, are going to have profound aftermath on sensory data in terms of security and privacy.“ \cite{QR_sigs}
+%done
+    „principles of data integrity, message authentication, and nonrepudiation, are going to have profound aftermath on sensory data in terms of security and privacy.“ \cite{QR_sigs}
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
 The quantum revolution is coming. With quantum computers\footnote{compare section \ref{l:quantum_computing}} on the way to get more and more functional, people are fearing a loss of their security and privacy.
@@ -91,10 +92,10 @@ A popular example for hobbiest IoT devices is the ESP32 from Espressif Microsyst
 They offer multiple Modules with up to 240Mhz Clock on the 32 IC, up to 16MiB Flash Storage and 320KiB RAM.
 Which is more than other compareable devices but way less then a lower spec modern smartphone, with 10 times the frequency, 4GB of RAM and 64GB of storage.
 
-Since the IoT consists of very different types of constrained nodes the IETF introduced different classes on which to classify IoT nodes, those can be seen in table \ref{classes}
+Since the IoT consists of very different types of constrained nodes the IETF introduced different classes on which to classify IoT nodes, those can be seen in table \ref{IoT-classes}
 
 \begin{table}
-    \label{classes}
+    \label{IoT-classes}
     \caption{IETF IoT Classes}
     \begin{tabular}{l | c c}
         Class & RAM & Flash \\
@@ -129,18 +130,37 @@ They all do have in common though, that their security is not absolutely mathema
 We therefor need to consider a few measures that make schmemes more or less secure.
 \subsubsection{Performance Metrics}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
-- Security Level (1-5, AES-128, SHA256, AES-192, SHA384, AES-256) \cite{QR_Iot_Lattice,Energy_comp}([7]) determined via grovers alg
-- no standard benchmark for quantum resistance \cite{QR_comparison} (nist levels 1-5)
+%done
+    - Security Level (1-5, AES-128, SHA256, AES-192, SHA384, AES-256) \cite{QR_Iot_Lattice,Energy_comp}([7]) determined via grovers alg
+    - no standard benchmark for quantum resistance \cite{QR_comparison} (nist levels 1-5)
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
 Some performance metrics exist in QR schemes as well as in classic schemes.
-Keylength and
-key exchange message length \cite{QR_algs} are the more obvious ones.
-The computing time also comes to mind as a perfomance metric. Here you need to differentiate between key generation, which is less important, since it should only occur rarely, and signing as well as signature verification \footnote{as well as its counterparts de- and encryption}.
+
+Keylength and key exchange message length \cite{QR_algs} are the more obvious ones.
+The computing time also comes to mind as a performance metric. Here you need to differentiate between key generation, which is less important, since it should only occur rarely, and signing as well as signature verification \footnote{as well as its counterparts de- and encryption}.
 
 Primarely in signatures another metric arises: how often can a private key be used before it needs to be switched out for another one, because the signature leaked information of the key.
 This is not particularly relevant in most cases, as methods can be used to create long term procedures from short term procedures (those where a key can rarely, if ever, be recycled).
-But it is relevant in the case of the IoT, since those methods require extra memory which is sparse in IoT-devices. Adiitionally they tend to make the signatures themself longer, which also is not preferrable in the IoT. \cite{QR_algs}
+But it is relevant in the case of the IoT, since those methods require extra memory which is sparse in IoT-devices. Additionally they tend to make the signatures themself longer, which also is not preferrable in the IoT. \cite{QR_algs}
+
+Additionally to more tradidional performance metrics we somehow need to measure the security of given schmemes against an attack by a quantum computer.
+Sadly there is currently no standard benchmark to measure quantum resistance \cite{QR_comparison}, nevertheless the NIST created a standard that describes how secure a scheme is against a quantum computer by classifiing it within 5 classes that can be determined with grovers algorithm \cite{QR_Iot_Lattice,Energy_comp}.
+Those classes can be seen in table \ref{QR-classes}
+
+\begin{table}
+    \label{QR-classes}
+    \caption{QR Security classes and their traditional counterparts as classified by the NIST}
+    \begin{tabular}{l | c}
+        Class & security compareable to \\
+        \hline
+        1 & AES-128 \\
+        2 & SHA256 \\
+        3 & AES-192 \\
+        4 & SHA384 \\
+        5 & AES-256 \\
+    \end{tabular} 
+\end{table}
 
 \subsubsection{Encryption}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
@@ -162,6 +182,8 @@ Mixed schemes for backwards comp: neither fully safe nor efficent since 2 scheme
 
 mostly code/lattice based implementations \cite{QR_comparison}
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
+
+
 
 \subsubsection{Signatures} 
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
