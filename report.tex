@@ -256,17 +256,21 @@ HBS vs Lattice:
 \section{QR Signatures in IoT}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 Stack usage:
-    name        & KeyGen    & Sign  & Verify
-    Dilithium-3 & 50k       & 86k   & 54k
-    qTESLA-1    & 22k       & 29k   & 23k
-    qTESLA-3    & 43k       & 28k   & 45k
-    Falcon-5    & 120k      & 120k  & 120k
+    name            & KeyGen    & Sign  & Verify
+    Dilithium-3     & 50k       & 86k   & 54k
+    newer dil(dyn)  & not meas  & 52k   & 36k \cite{update_sign}
+    newer dil(sta)  & aheadOf t & 35k   & 19k \cite{update_sign}
+    qTESLA-1        & 22k       & 29k   & 23k
+    qTESLA-3        & 43k       & 28k   & 45k
+    Falcon-5        & 120k      & 120k  & 120k
+    newer FALCON    & not meas  & 42k   & 4.7k \cite{update_sign}
 
 Clock cycles (10mil ~ 60ms (ARM M4 (168Mhz))):
     name        & KeyGen    & Sign  & Verify
     Dilithium-3 & 2.3m      & 8.3m  & 2.3m
     Dilithium-3 & 2.1       & 7.2   & 2.1 \cite{Energy_comp}
     Falcon-5    & 365m      & 165m  & 1m
+    Falcon      & note meas & 75m   & 1m \cite{update_sign}
     qTESLA-3    & 30m       & 11m   & 2.2m
     \cite{QR_Iot_Lattice}
 
