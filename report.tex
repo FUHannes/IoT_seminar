@@ -217,7 +217,7 @@ Signatures classify as
 \cite{QR_sigs}
 
 hash based or lattice based:
-- hash: XMSS, SPHINCS \cite{QR_IoT}
+- hash: XMSS, SPHINCS \cite{QR_IoT} (WOTS in IOTAs Tangle)
 - lamport OT signature \cite{QR_algs} (as the name implies only useable one time - useless ; can precompute a bunch that are verifiable with the same pubk - useless since rare storage)
 - lattice based signatures (high-d basis find shortest vector (SVP) or closest lattice vector to arbitrary point (CVP)) require megabits of basis - unfeasable NTRU reduce to kilobits by introducing symetry \cite{QR_algs,QR_comparison}
     -10-100* faster than conventional crypto
@@ -252,10 +252,31 @@ HBS vs Lattice:
 
 
  code-based:   
-- McEliece decrypt padded message digest - try thousands of paddings - signing takes 30seks, 4mb priv/pub KEY-size -not feasbale
+- McEliece decrypt padded message digest - try thousands of paddings - signing takes 30secs, 4mb priv/pub KEY-size -not feasbale
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 The other pillar of cryptography, signature schemes, is what we will focus on in greater detail.
-As well as in encryption schemes we can differentiate
+As well as in encryption schemes we can differentiate between different underlying mathematical problems. Those are pretty much the same as in encryption schemes: 
+Hash based,
+Lattice based,
+Multivariate polynomial based,
+Code based,
+Super-singular isogeny based.
+
+Rainbow is the only implementation of a QR signature that is a current contender for standardization that is neither lattice nor hash based.
+And as already mentioned in the previous section it is multivariate based.
+
+Since this sparsity of alternatives we we also focus on hash and lattice based signatures in this paper.
+
+Hash based signatures have their security based upon the hardness of reversing Hashes or one-way functions.
+The most easy one is the Lamport one time signature (OTS).
+That signature has essentially two private keys for every bit in the message digest. 
+The advantage of those schemes is, that the private keys do not have to have any special characteristic that could be taken advantage of by a quantum computer to break anything.
+They do have to be high entropy though, to not be easily forgeable with even a classic computer. These secrets are then hashed and published as the public key.
+When a message is signed the signer just publishes the secret corresponding to every bit of the digest s.t. everyone can hash that secret and see that this private keys are indeed the ones corresponding to the public key.
+A directly visable disadvantage is, that this schemes (as the name implies) can trivially be only used one time, since most of the private keys are now public.
+%TODO: Stateful und einfach nächsten key mitsenden uns mitsignieren
+%TODO: winterlitz
+%TODO: stateful vs stateless and how two
 
 
 \section{QR Signatures in IoT}
