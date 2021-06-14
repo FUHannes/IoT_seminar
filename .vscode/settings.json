@@ -1,0 +1,20 @@
+{
+    "cSpell.words": [
+        "ecdsa",
+        "eliece",
+        "espressif",
+        "mc",
+        "nist",
+        "qubits",
+        "shor",
+        "shors",
+        "supersingular"
+    ],
+    "cSpell.ignoreWords": [
+        "atmega",
+        "blabla",
+        "euclids",
+        "grovers",
+        "unforgeable"
+    ]
+}
