@@ -7,6 +7,8 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{nicefrac}
 \newcommand{\comment}[1]{}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -67,7 +69,7 @@ And finally focussing on the best signature contender for the IoT so far: FALCON
 % done : already distinguish between : hashing, encryption (symmetric/asymmetric), signatures
 Loosely speaking the main topic of cryptography can be divided into three groups.
 The first of these groups is about one way functions, that shall not, as the name implies, be efficiently reversible.
-If we create a smaller value of constant length from a bigger set of possibly variable length, we commonly refer to that as hashing.
+If we create a smaller value of constant length from a bigger set of possibly variable length, we commonly refer to that as \textit{hashing}.
 Cryptographic hashing is important for a variety of different applications like storing and matching passwords without the ability to infer any knowledge about that password.
 Hashing itself can be used for the next pillar of cryptography: signatures.
 Signature schemes are used to proof integrity or authenticity of any data.
@@ -77,7 +79,8 @@ These schemes consist of the two parts encryption and decryption.
 Additionally to those parts for signatures as well as encryption there needs to be process of key-generation.
 We also differentiate between symmetric and asymmetric schemes. The first one has a different private and public key while the latter uses the same for de- and encryption.
 More details about which of those schemes will be more or less endangered by quantum computing are in section \ref{l:quantum_computing} and \ref{l:qr-algs}.
-
+\newline
+In general we denote a signature scheme as the group of three algorithms \{GEN, SIGN, VER\} and a encryption scheme as \{GEN, ENC, DEC\}.
 % noTODO ? Background section to put this in?
 \subsection{Internet of Things}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
@@ -270,12 +273,13 @@ Since this sparsity of alternatives we we also focus on hash and lattice based s
 Hash based signatures have their security based upon the hardness of reversing Hashes or one-way functions.
 The most easy one is the Lamport one time signature (OTS).
 That signature has essentially two private keys for every bit in the message digest. 
-Let $n \in \mathbb{N}$ be the bitlength of the digest, then the secret key would be: \[k_\text{priv}= (S_{0,0},S_{0,1}) || (S_{1,0},S_{1,1})|| \dots || (S_{n,0},S_{n,1})\]
+Let $n \in \mathbb{N}$ be the bit-length of the digest, then the secret key would be: \[k_\text{priv}= (S_{0,0},S_{0,1}) || (S_{1,0},S_{1,1})|| \dots || (S_{n,0},S_{n,1})\]
 The advantage of those schemes is, that the private keys do not have to have any special characteristic that could be taken advantage of by a quantum computer to break anything.
 They do have to be high entropy though, to not be easily forgeable with even a classic computer. 
-These secrets are then hashed (with a one-way function $h$) and published as the public key \[
-    k_\text{pub}= (h(S_{0,0}),h(S_{0,1})) || (h(S_{1,0}),h(S_{1,1}))|| \dots || (h(S_{n,0}),h(S_{n,1}))
-\].
+These secrets are then hashed (with a one-way function $h$) and published as the public key \begin{align*}
+    &k_\text{pub}= \\ &(h(S_{0,0}),h(S_{0,1})) || (h(S_{1,0}),h(S_{1,1}))|| \dots || (h(S_{n,0}),h(S_{n,1}))
+\end{align*}
+
 When a message is signed the signer just publishes the secret corresponding to every bit of the digest ($S{k,b}$ with $b$ being the bit-value in the $k$-th position ob the digest) s.t. everyone can hash that secret and see that this private keys are indeed the ones corresponding to the public key and the correct bit-value of the digest.
 Signing as well as verifying are therefor rather easy operations with one disadvantage: the keys and the signature are super big.
 But there are some rather easy improvements for this problem e.g. one could only sign the zeros, therefor reducing key sizes by a factor of $2$ as well as average signature sizes. To mitigate an attack that can flip digest-zeros to ones a checksum is added (that can only be decreased by flipping a one to zero, which is impossible if you do not know the pre-image (private key) of that location).
@@ -287,7 +291,56 @@ This can be a great advantage for IoT applications, since time is not as valuabl
 A directly visible disadvantage of those schemes (as the name implies) is that they can trivially only be used one time, since most of the private key gets public with the signature. 
 A trivial countermeasure would be to append the next public keys to the message and sign them as well, but thats not a good idea in most use cases, since you might as well just use symmetric cryptography which is also considered as quantum resistant as hashes.
 Another idea would be to just publish a whole lot of private keys that can than be used one by one. But thats not a super brilliant idea since signer as well as verifier need to store all these keys which is specially infeasible in IoT scenarios (that have very constrained storage).
- 
+Schemes that can be used multiple times are smartly called multiple time signatures (MTS).
+
+A smarter approach to simply publishing $n$ public keys and storing $n$ private keys was proposed by merkle \cite{merkle_ots}.
+His approach uses so called merkle hash trees to make it possible to have a very small public key that can still verify $n$ signatures on the tradeoff that every signature now increases by a factor of $\log(n)$.
+The idea is as follows:
+
+\begin{algorithm}
+\caption{GEN}\label{merkle gen v1}
+    \begin{enumerate}
+        \item generate $n=2^m$ random values, those are the private keys.
+        \item for every private key $k_\text{priv}^i$ generate a one-time public key $k_\text{pub}^i=h(k_\text{priv}^i)$ (until here it is similar to a trivial MTS)
+        \item hash every two `neighboring' keys $k_\text{pub}^i$, $k_\text{pub}^j$ together in pairs to generate $\nicefrac{n}{2}$ new hashes $h_{ij}=h(k_\text{pub}^i, k_\text{pub}^j)$ 
+        \item hash those in pairs for the next iteration and repeat until the hash-tree is complete and we only have one root hash denoted as $k_\text{pub}$
+        \item publish $k_\text{pub}$ that can now be used to verify $n$ signatures
+    \end{enumerate}
+\end{algorithm}
+
+\begin{algorithm}
+    \caption{SIGN}\label{merkle sig v1}
+        \begin{enumerate}
+            \item input message digest $M_i$
+            \item sign as described for Lamport or Winternitz schemes (or other OTS schemes that generate the public key by hashing the private key): $S_i=\text{Sign}(M_i)$
+            \item publish $S_i$ together with all hashes $h$ needed to iteratively generate the root hash $k_\text{pub}$. These are $m$ hashes.
+        \end{enumerate}
+    \end{algorithm}
+
+\begin{algorithm}
+    \caption{VER}\label{merkle ver v1}
+        \begin{enumerate}
+            \item input signature $(S_i,[h_{j},h_{i+2,j+2},\dots,h_{i-k}])$ and digest $M_i$ and already known multiple use public key $k_\text{pub}=h_{0-(n-1)}$
+            \item hash $S_i$ to generate $k_\text{pub}^i$
+            \item hash $k_\text{pub}^i=h_i$ together with $h_j$ to generate $h_{ij}$
+            \item hash the value from previous step together with the next hash given by the signature
+            \item repeat step 4) until the root hash $k_\text{pub}$ should be found (thats $m$ steps in total) return True if they are equal and False otherwise
+        \end{enumerate}
+    \end{algorithm}
+
+This is already very useful for IoT actors that only need to verify, less so for sensors that still need to store all $n$ private keys. 
+The computational cost is higher, caused by calculating all those hashes but thats commonly worth the tradeoff. 
+
+On the other side (the signer) we need to store all $n$ private keys and calculate $m$ hashes every time we want to sign anything.
+The second step can be skipped by also storing the hashes instead of calculating them, which increases the storage needed by a factor of $2$.
+But thats infeasible for most storage constrained devices.
+Therefor an additional tweak was applied to this algorithm:
+Instead of randomly generating each private key and storing it, we use a Pseudo-Random-Generator (PRG) together with a seed and a counter to be able to generate every private key on the fly.
+We can then iterativly generate our merkle tree and drop every nodes we already used to calculate the next parent hash without exceeding our RAM to generate the root hash to publish as the public multi time key.
+For signing we can then create our private key again with the help of the PRG and again calculate all needed hashes iterativly the same way. 
+But thats rather computationally expensive to recalculate the whole tree on every signature. 
+Thats why we should cache as many in-between hashes as possible since every already stored hash reduces the computational expenses by a factor of 2.
+The verification stays the same.
 
 %TODO: Stateful und einfach nächsten key mitsenden uns mitsignieren
 %TODO: stateful vs stateless and how two
