@@ -263,7 +263,7 @@ Hash based,
 Lattice based,
 Multivariate polynomial based,
 Code based,
-Super-singular isogeny based.
+Super-singular isogeny based.\cite{QR_sigs}
 
 Rainbow is the only implementation of a QR signature that is a current contender for standardization that is neither lattice nor hash based.
 And as already mentioned in the previous section it is multivariate based.
@@ -271,7 +271,7 @@ And as already mentioned in the previous section it is multivariate based.
 Since this sparsity of alternatives we we also focus on hash and lattice based signatures in this paper.
 
 Hash based signatures have their security based upon the hardness of reversing Hashes or one-way functions.
-The most easy one is the Lamport one time signature (OTS).
+The most easy one is the Lamport one time signature (OTS).\cite{QR_algs} 
 That signature has essentially two private keys for every bit in the message digest. 
 Let $n \in \mathbb{N}$ be the bit-length of the digest, then the secret key would be: \[k_\text{priv}= (S_{0,0},S_{0,1}) || (S_{1,0},S_{1,1})|| \dots || (S_{n,0},S_{n,1})\]
 The advantage of those schemes is, that the private keys do not have to have any special characteristic that could be taken advantage of by a quantum computer to break anything.
@@ -342,8 +342,20 @@ But thats rather computationally expensive to recalculate the whole tree on ever
 Thats why we should cache as many in-between hashes as possible since every already stored hash reduces the computational expenses by a factor of 2.
 The verification stays the same.
 
-%TODO: Stateful und einfach nächsten key mitsenden uns mitsignieren
-%TODO: stateful vs stateless and how two
+This scheme is know as the eXtendes Merkle Signature Scheme (XMSS) which also has some further variants and developments. \cite{QR_IoT }
+
+Another disadvantage of schemes as described is the so-called statefulness, which means that the signer cannot just sign any message with a key after being reset, since some kind of state is needed that would be lost in a reset. \cite{QR_sigs}
+
+In a stateless scheme on the other hand, all you need to sign a message is a static private key.
+That brings us to the other kind of signature schemes, ones that are more similar to traditional asymmetric crypto in the sense that they rely on not so trivial mathematical problem that is not easily algorithmically solveable. But instead of prime factorization or Elliptic curve calculation, this one seems to be hard to solve, even by a quantum computer. The problem for most of these schemes are Lattice Based.
+
+A lattice in this case is a high-dimensional grid with only integer values. Or to be more precise: ``An n-dimensional lattice is the set of vectors that can be
+expressed as the sum of integer multiples of a specific set of n
+vectors, collectively called the basis of the lattice—note that
+there are an infinite number of different bases that will all
+generate the same lattice'' \cite{QR_algs}
+The mathematical problems that these schemes are based upon are the shortest vector problem (SVP) where a very short vector between to points need to be found or the Closest Vector Problem, where a Lattice Vector needs to be found that is closest to a given arbitrary point.
+
 
 
 \section{QR Signatures in IoT}
