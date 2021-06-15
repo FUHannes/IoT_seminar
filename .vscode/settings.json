@@ -3,12 +3,15 @@
         "ecdsa",
         "eliece",
         "espressif",
+        "lamport",
         "mc",
+        "merkle",
         "nist",
         "qubits",
         "shor",
         "shors",
-        "supersingular"
+        "supersingular",
+        "winternitz"
     ],
     "cSpell.ignoreWords": [
         "atmega",

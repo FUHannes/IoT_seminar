@@ -270,12 +270,26 @@ Since this sparsity of alternatives we we also focus on hash and lattice based s
 Hash based signatures have their security based upon the hardness of reversing Hashes or one-way functions.
 The most easy one is the Lamport one time signature (OTS).
 That signature has essentially two private keys for every bit in the message digest. 
+Let $n \in \mathbb{N}$ be the bitlength of the digest, then the secret key would be: \[k_\text{priv}= (S_{0,0},S_{0,1}) || (S_{1,0},S_{1,1})|| \dots || (S_{n,0},S_{n,1})\]
 The advantage of those schemes is, that the private keys do not have to have any special characteristic that could be taken advantage of by a quantum computer to break anything.
-They do have to be high entropy though, to not be easily forgeable with even a classic computer. These secrets are then hashed and published as the public key.
-When a message is signed the signer just publishes the secret corresponding to every bit of the digest s.t. everyone can hash that secret and see that this private keys are indeed the ones corresponding to the public key.
-A directly visable disadvantage is, that this schemes (as the name implies) can trivially be only used one time, since most of the private keys are now public.
+They do have to be high entropy though, to not be easily forgeable with even a classic computer. 
+These secrets are then hashed (with a one-way function $h$) and published as the public key \[
+    k_\text{pub}= (h(S_{0,0}),h(S_{0,1})) || (h(S_{1,0}),h(S_{1,1}))|| \dots || (h(S_{n,0}),h(S_{n,1}))
+\].
+When a message is signed the signer just publishes the secret corresponding to every bit of the digest ($S{k,b}$ with $b$ being the bit-value in the $k$-th position ob the digest) s.t. everyone can hash that secret and see that this private keys are indeed the ones corresponding to the public key and the correct bit-value of the digest.
+Signing as well as verifying are therefor rather easy operations with one disadvantage: the keys and the signature are super big.
+But there are some rather easy improvements for this problem e.g. one could only sign the zeros, therefor reducing key sizes by a factor of $2$ as well as average signature sizes. To mitigate an attack that can flip digest-zeros to ones a checksum is added (that can only be decreased by flipping a one to zero, which is impossible if you do not know the pre-image (private key) of that location).
+Another improvement often wrongly
+\footnote{the merkle OTS has two parts, one that is similar to the Lamport scheme (which was then improved by Winternitz) and one that uses Merkle Hash Trees, which most of the literature refers to as the Merkle Signature, but is not a incessor of the winternitz scheme which does not use Merkle Trees \cite{merkle_ots}} 
+cited as the successor to the Merkle OTS is the Winternitz Scheme (WOTS), which builds upon the same idea but uses a different (greater) basis $b$, which inturn makes the signing and verifying more computational expensive by needing to apply hashes $b$ times. The great advantage though is that the keys and signatures also decrease by a factor of $b$.
+This can be a great advantage for IoT applications, since time is not as valuable as storage. Therefor WOTS is actually used in practice, for example as a signature on the IOTA distributed ledger. \cite{iota_wots}
+
+A directly visible disadvantage of those schemes (as the name implies) is that they can trivially only be used one time, since most of the private key gets public with the signature. 
+A trivial countermeasure would be to append the next public keys to the message and sign them as well, but thats not a good idea in most use cases, since you might as well just use symmetric cryptography which is also considered as quantum resistant as hashes.
+Another idea would be to just publish a whole lot of private keys that can than be used one by one. But thats not a super brilliant idea since signer as well as verifier need to store all these keys which is specially infeasible in IoT scenarios (that have very constrained storage).
+ 
+
 %TODO: Stateful und einfach nächsten key mitsenden uns mitsignieren
-%TODO: winterlitz
 %TODO: stateful vs stateless and how two
 
 
