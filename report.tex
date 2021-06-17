@@ -238,7 +238,7 @@ HBS vs Lattice:
     - BLISS (lattice) (arm M4)
         - 5.9mil
         - 1mil
-        - 7; 2 (hm ouf)
+        - 7; 2 (hm ouf, doch nicht so uff, sind ja nur KB)
         - 0.96
 
 	HBS is well studied/understood/practiced lattice not and vulnerabilities discovered one after the other
@@ -271,6 +271,7 @@ And as already mentioned in the previous section it is multivariate based.
 
 Since this sparsity of alternatives we we also focus on hash and lattice based signatures in this paper.
 
+\subsubsection{Hash Based Signatures (HBS)}
 Hash based signatures have their security based upon the hardness of reversing Hashes or one-way functions.
 The most easy one is the Lamport one time signature (OTS).\cite{QR_algs} 
 That signature has essentially two private keys for every bit in the message digest. 
@@ -345,8 +346,10 @@ The verification stays the same.
 
 This scheme is know as the eXtendes Merkle Signature Scheme (XMSS) which also has some further variants and developments. \cite{QR_IoT }
 
-Another disadvantage of schemes as described is the so-called statefulness, which means that the signer cannot just sign any message with a key after being reset, since some kind of state is needed that would be lost in a reset. \cite{QR_sigs}
+Another disadvantage of schemes as described is the so-called statefulness, which means that the signer cannot just sign any message with a key after being reset, since some kind of state is needed that would be lost in a reset. \cite{QR_sigs} 
+Besides that and even more impactful the verifier in an MSS needs to manage which keys/ part of the tree have already bin used, since reusing keys is imperative to the schemes security.
 
+\subsubsection{Lattice Based Signatures (LBS)}
 In a stateless scheme on the other hand, all you need to sign a message is a static private key.
 That brings us to the other kind of signature schemes, ones that are more similar to traditional asymmetric crypto in the sense that they rely on not so trivial mathematical problem that is not easily algorithmically solveable. But instead of prime factorization or Elliptic curve calculation, this one seems to be hard to solve, even by a quantum computer. The problem for most of these schemes are Lattice Based.
 
@@ -362,13 +365,68 @@ These new schemes are not only resistant to quantum attacks but also improve eff
 Sadly these lattice structures where vulnerable through lattice reduction techniques to Chosen Ciphertext Attacks (CCA) in the case of encryption schemes. But that was fixed with the introduction of a special padding scheme that made these attacks impossible but also increased the key-lengths \cite{QR_algs} .
 In the case of signature schemes (like NTRUSign) the problem is even more severe.
 The signature works by first mapping the message to a vector and then signing by solving the CVP for this vector. The problem is, that this procedure leaks information about the private key s.t. it was shown to be practically broken after only around 400 signatures.  To mitigate that issue the signer does not give the actual closest lattice vector, but a lattice vector that is close enough by a certain measure, but not necessary the closest. Therefor the leaked information is nearly neglectable and the signature and private key secure for around a billion signatures, although it is still advised to change the private key after around 10 million signatures. 
-That is totally feasable compared to some MTS mentioned before since in many cases 10 million signatures is a whole lot.
+That is totally feasable compared to some MTS mentioned before since in many cases 10 million signatures is a whole lot.\cite{QR_IoT}
 
 Actual Lattice based implementation that were proposed in 2017 are GPV, GLP and BLISS. But now there are newer and better implementations like FALCON that will be discussed in section \ref{falcon}.
 
-% TODO : compare BLISS to Sphincs and conclusion about stateful (HBS) and stateless (lattice)
+\subsubsection{Comparison of HBS and LBS and Statefulness versus statelessness}
+% done : compare BLISS to Sphincs and conclusion about stateful (HBS) and stateless (lattice)
+At the time \cite{QR_sigs} was written, one the most common HBS was SPHINCS, which has not changed much, although it got a major update and has quite a few variants.
+The most prominent LBS was called BLISS.
+Suhail et al. then compared these two implementation and measured their performance.
+BLISS (the LBS) was evaluated on a common IoT processor with ARMs M4 architecture while SPHINCS (the HBS) was evaluated on a intel XEON server processor. Still BLISS performed considerably better with exception of the key sizes. Results of their measurements are shown in table \ref{t:sphincsVSbliss}.
+
+\begin{table}[htbp]
+    \centering\begin{tabular}{r | c  c}
+        Metric & SPHINCS results & BLISS results\\
+        \hline
+        Signature clock-cycles & 50 million & 5.9 million \\
+        Verification clock-cycles & 1.6 million & 1 million \\
+        Public key size & 1KB & 7KB \\
+        Private key size & 1KB & 2KB \\
+        Signature size & 41KB & 960 bytes \\
+    \end{tabular}
+    \caption{Measurement results of comparing BLISS on M4 with SPHINCS on intel XEON as of \cite{QR_sigs}}
+    \label{t:sphincsVSbliss}
+\end{table}
+
+We can therefor compare and somewhat conclude the pros and cons of LBS compared to HBS.
+First of all it is to say, that HBS is already very well studied and bases its security upon already well established and praxis-tested Problems (Hashing), while Lattice based Security is still quite not new and in active research. It bases its security upon the CVP (or SVP) which itself is not studied that well, and a few vulnerabilities have already been shown \cite{QR_sigs}.
+Another comparison, less about the underlying mathematical problems, but more from an applicational standpoint, is also from interest - statefulness.
+We already know what stateful means, but Suhail et al. summarizes it rather well: 
+``stateful digital signature scheme necessitates the main- tenance of the updated nonrepeated secret key upon each signature generation process. It is essential to keep track of nonrepeated key pairs, failing which will result in the degra- dation of the security of the cryptographic scheme'' 
+We can already see that this would be a problem in many use-cases.
+There are HBS schemes, like the above SPHINCS, that found a way to to make themselves stateless, but that comes with its own downsides, like in this case greatly increasing the key-generation expenses (compare table \ref{t:sphincsVSbliss}) , which is caused by using keys in a random order therefor making BDS optimization no longer applicable.
+
+% TODO : can i somehow "hervorheben" this
+It can therefor be concluded that stateful schemes are great in processor power/time constrained use cases while stateless schemes trade computing power for storage used and are therefor better in memory constrained use-cases. \cite{QR_sigs}
 
 \section{QR Signatures in IoT}
+
+\subsection{Performance Metrics in IoT}
+\comment{ %%%%%%%% NOTES %%%%%%%%%%%
+- key/ exchange message/ signature size 
+- cache/ ram usage
+
+- setup(ms)  lifetime, pubk size, privk size, sig
+
+'' small sized public key, small digital 
+signature and a range of supported hash output sizes is 
+recommended''\cite{QR_Iot_Lattice}
+
+- Stateful/less
+- „signature and/or key sizes to running times and memory consumption to energy consumption „
+- „From the software benchmark perspec- tive, the runtime of key generation, signing, and verification processes whereas from the hardware perspective, CPU cycles, key size, signature size, and energy consumption are among the targeted evaluation metrics. In general, the parameter sets are highly dependent on the underlying construction of a particular scheme.“
+\cite{QR_sigs}
+
+- most impls have quite large keys \cite{QR_comparison}
+- key gen performance since many schemes have limited signatures \cite{QR_comparison}
+
+- IoT evolves, when fast quantum is available iot will be better too  \cite{QR_comparison}
+} %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
+
+
+
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 Stack usage:
     name            & KeyGen    & Sign  & Verify
@@ -392,28 +450,6 @@ Clock cycles (10mil ~ 60ms (ARM M4 (168Mhz))):
 Hash-Based Sphincs promising since stateless, but many parameters to set \cite{QR_IoT_Energy}
 
 as of \cite{QR_comparison} only schemes (out of ~50) with < 4kbit: SIKE and Round5 
-} %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
-
-\subsection{Performance Metrics in IoT}
-\comment{ %%%%%%%% NOTES %%%%%%%%%%%
-- key/ exchange message/ signature size 
-- cache/ ram usage
-
-- setup(ms)  lifetime, pubk size, privk size, sig
-
-'' small sized public key, small digital 
-signature and a range of supported hash output sizes is 
-recommended''\cite{QR_Iot_Lattice}
-
-- Stateful/less
-- „signature and/or key sizes to running times and memory consumption to energy consumption „
-- „From the software benchmark perspec- tive, the runtime of key generation, signing, and verification processes whereas from the hardware perspective, CPU cycles, key size, signature size, and energy consumption are among the targeted evaluation metrics. In general, the parameter sets are highly dependent on the underlying construction of a particular scheme.“
-\cite{QR_sigs}
-
-- most impls have quite large keys \cite{QR_comparison}
-- key gen performance since many schemes have limited signatures \cite{QR_comparison}
-
-- IoT evolves, when fast quantum is available iot will be better too  \cite{QR_comparison}
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
 
