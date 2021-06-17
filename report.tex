@@ -26,6 +26,7 @@ hannes.hattenbach@fu-berlin.de}
 \maketitle
 
 \begin{abstract}
+    % TODO
 %*CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, or Math in Paper Title or Abstract.
 \end{abstract}
 
@@ -354,9 +355,18 @@ expressed as the sum of integer multiples of a specific set of n
 vectors, collectively called the basis of the lattice—note that
 there are an infinite number of different bases that will all
 generate the same lattice'' \cite{QR_algs}
-The mathematical problems that these schemes are based upon are the shortest vector problem (SVP) where a very short vector between to points need to be found or the Closest Vector Problem, where a Lattice Vector needs to be found that is closest to a given arbitrary point.
+To put it mathematically we can denote a Lattice $L$ as $L=\{\sum a_i*b_i : a_i \in \mathbb{Z}\}$ with $b_0,\dots,b_n$ being arbitrary basis vectors.
+The mathematical problems that these schemes are based upon are the shortest vector problem (SVP) where a very short vector between to points need to be found or the Closest Vector Problem (CVP), where a lattice vector needs to be found that is closest to a given arbitrary point.
+The directly arising problem though is, that to get reasonable security the basis (which serves as a private key) of the lattice needs to be in the range of megabits, which again is not ideal for our use-cases. That is why researchers developed the NTRU cryptosystem, that introduces certain symmetries to the lattice structure s.t. the key sizes can be much smaller while lowering the security only slightly.\cite{QR_algs,QR_comparison}
+These new schemes are not only resistant to quantum attacks but also improve efficiency compared to traditional cryptography by having speed improvement by a factor of 10-100.
+Sadly these lattice structures where vulnerable through lattice reduction techniques to Chosen Ciphertext Attacks (CCA) in the case of encryption schemes. But that was fixed with the introduction of a special padding scheme that made these attacks impossible but also increased the key-lengths \cite{QR_algs} .
+In the case of signature schemes (like NTRUSign) the problem is even more severe.
+The signature works by first mapping the message to a vector and then signing by solving the CVP for this vector. The problem is, that this procedure leaks information about the private key s.t. it was shown to be practically broken after only around 400 signatures.  To mitigate that issue the signer does not give the actual closest lattice vector, but a lattice vector that is close enough by a certain measure, but not necessary the closest. Therefor the leaked information is nearly neglectable and the signature and private key secure for around a billion signatures, although it is still advised to change the private key after around 10 million signatures. 
+That is totally feasable compared to some MTS mentioned before since in many cases 10 million signatures is a whole lot.
 
+Actual Lattice based implementation that were proposed in 2017 are GPV, GLP and BLISS. But now there are newer and better implementations like FALCON that will be discussed in section \ref{falcon}.
 
+% TODO : compare BLISS to Sphincs and conclusion about stateful (HBS) and stateless (lattice)
 
 \section{QR Signatures in IoT}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
@@ -421,7 +431,7 @@ wahrscheinlich skippen da mir da hintergrund zu braid groups etc fehlt
 not in the endgame but also not broken afaik
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
-\subsection{FALCON}
+\subsection{FALCON}\label{falcon}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 falcon-512 (L1):
 pubk/sig 897/690 bytes (dil3: 1472/2701 ecdsa: 64)
