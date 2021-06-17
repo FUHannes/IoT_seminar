@@ -133,7 +133,7 @@ But not all asymmetric cryptography schemes are equally affected.
 There are different proposals, both for QR encryption and for QR signature schemes.
 They all do have in common though, that their security is not absolutely mathematically proven, but based upon assumptions.
 We therefor need to consider a few measures that make schemes more or less secure.
-\subsubsection{Performance Metrics}
+\subsection{Performance Metrics}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 %done
     - Security Level (1-5, AES-128, SHA256, AES-192, SHA384, AES-256) \cite{QR_Iot_Lattice,Energy_comp}([7]) determined via grovers alg
@@ -168,7 +168,7 @@ Those classes can be seen in table \ref{QR-classes}
     \end{tabular} 
 \end{table}
 
-\subsubsection{Encryption}
+\subsection{Encryption}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 %done:
     knapsack problem - broken
@@ -209,7 +209,7 @@ The main problem is, that the `shuffling' is realized through $k*n$ matrices tha
 The second one will be discussed in greater detail in section \ref{QR signatures}, since it is also used as one of the main problems for signature schemes.
 Those schemes are called lattice based and also have some implementation with the most famous for encryption being NTRUEncrypt.
 
-\subsubsection{Signatures} \label{QR signatures}
+\subsection{Signatures} \label{QR signatures}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 
 Signatures classify as
@@ -394,7 +394,7 @@ Hash-Based Sphincs promising since stateless, but many parameters to set \cite{Q
 as of \cite{QR_comparison} only schemes (out of ~50) with < 4kbit: SIKE and Round5 
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
-\subsubsection{Performance Metrics in IoT}
+\subsection{Performance Metrics in IoT}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 - key/ exchange message/ signature size 
 - cache/ ram usage
@@ -431,7 +431,7 @@ wahrscheinlich skippen da mir da hintergrund zu braid groups etc fehlt
 not in the endgame but also not broken afaik
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
-\subsection{FALCON}\label{falcon}
+\section{FALCON}\label{falcon}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 falcon-512 (L1):
 pubk/sig 897/690 bytes (dil3: 1472/2701 ecdsa: 64)
