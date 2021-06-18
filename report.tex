@@ -65,8 +65,8 @@ The following chapter will then focus on signature schemes in the IoT, starting 
 With a little more details about two failed signature schemes to highlight potential pitfalls. 
 And finally focussing on the best signature contender for the IoT so far: FALCON.
 
-\section{Background}
-\subsection{Cryptography}
+\section{Background}\label{background}
+\subsection{Cryptography}\label{bg:crypto}
 % done : already distinguish between : hashing, encryption (symmetric/asymmetric), signatures
 Loosely speaking the main topic of cryptography can be divided into three groups.
 The first of these groups is about one way functions, that shall not, as the name implies, be efficiently reversible.
@@ -83,13 +83,14 @@ More details about which of those schemes will be more or less endangered by qua
 \newline
 In general we denote a signature scheme as the group of three algorithms \{GEN, SIGN, VER\} and a encryption scheme as \{GEN, ENC, DEC\}.
 % noTODO ? Background section to put this in?
-\subsection{Internet of Things}
+\subsection{Internet of Things}\label{bg:iot}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
-- growing: over 3 billion rn \cite{QR_IoT}
+%done
+    - growing: over 3 billion rn \cite{QR_IoT}
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
 %discussion what the boundaries of iot compare different devices from linux devices rPI over 32bit Arm based processors with RTOS to 8bit micro controller like arduino/atmega
-The IoT consists of devices of all sorts, having in common, that they communicate with each other and the environment rather than directly with humans.
+The IoT consists of a growing number (currently over 3 billion \cite{QR_IoT}) of devices of all sorts, having in common, that they communicate with each other and the environment rather than directly with humans.
 Those devices range from automatic lights and smart home devices to tiny interconnected sensors in automatic fabrication.
 A common characteristic though is, that most of these devices have limited processing power, flash storage and random access memory (RAM). 
 A popular example for hobbyist IoT devices is the ESP32 from Espressif Microsystems.
@@ -403,6 +404,8 @@ It can therefor be concluded that stateful schemes are great in processor power/
 
 \section{QR Signatures in IoT}
 
+We now have an overview of what kind of QR signature schemes exist with some focus on the two most promising underlying mathematical structures, hashes and lattices. In the following sections we will even more focus on what kind of actual implementation exist and which of them are feasable in an constrained environment.
+
 \subsection{Performance Metrics in IoT}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 - key/ exchange message/ signature size 
@@ -424,7 +427,16 @@ recommended''\cite{QR_Iot_Lattice}
 
 - IoT evolves, when fast quantum is available iot will be better too  \cite{QR_comparison}
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
+First of all we need to establish what metrics we need to consider to evaluate which implementation are better suited and which are ill suited.
+As mentioned in section \label{bg:iot} we have constraints in different fields. Those are primarily available energy therefor computing time and power as well as storage.
+The storage itself can also be split into read only memory (ROM) and writeable memory (RAM).
+Most operating systems (e.g. RIOT) split the available RAM again to expose two kinds of memory structures: stack and heap. These are often relevant since the stack and heap are used for different purposes, but since those are resizable at build time we wont focus on the differentiation between stack and heap.
+Another memory differentiation that might be more relevant for future differentiation between stateful and stateless schemes is between persistant and volatile memory. 
+For stateful schemes we need persistant writeable memory and probably quite a lot of it while stateless schemes typically require more computing time for every signature. Which brings us to the main metrics:
 
+For each algorithm (GEN, SIGN,VER) we are interested in RAM/cache usage, execution time/energy consumption.
+We are also interested of of different sizes that need to be either stored or transmitted vie the network, these are signature as well as private and public key sizes.
+The overall needed ROM for any algorithm is also from great interest since this is needed to say whether a scheme is applicable for different classes of IoT nodes as mentioned in section \ref{bg:iot}.
 
 
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
@@ -467,7 +479,7 @@ wahrscheinlich skippen da mir da hintergrund zu braid groups etc fehlt
 not in the endgame but also not broken afaik
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
-\section{FALCON}\label{falcon}
+\section{FALCON}\label{falcon}0
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 falcon-512 (L1):
 pubk/sig 897/690 bytes (dil3: 1472/2701 ecdsa: 64)
