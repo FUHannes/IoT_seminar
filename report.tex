@@ -9,6 +9,7 @@
 \usepackage{xcolor}
 \usepackage{algorithm}
 \usepackage{nicefrac}
+\usepackage{footmisc}
 \newcommand{\comment}[1]{}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -44,7 +45,7 @@ Internet of Things, Quantum Resistance, Secure Signatures, Power Constraint Devi
 
 The quantum revolution is coming. With quantum computers\footnote{compare section \ref{l:quantum_computing}} on the way to get more and more functional, people are fearing a loss of their security and privacy.
 Or as \cite{QR_sigs} puts it, ``principles of data integrity, message authentication, and nonrepudiation, are going to have profound aftermath on sensory data in terms of security and privacy.''
-That is because there are algorithms based on Shors algorithm that can forge signatures and decrypt encrypted messages whos security is based on discrete logarithms, including elliptic curves or prime factorization, like our most common schemes ECDSA and RSA respectively are.
+That is because there are algorithms based on Shors algorithm that can forge signatures and decrypt encrypted messages whos security is based on discrete logarithms, including elliptic curves or prime factorization, like our most common schemes Elliptic Curve Digital Signature Algorithm (ECDSA) and RSA respectively are.
 The quantum computer only needs access to the public keys of these asymmetric schemes.
 The expenditure to forge a signature\footnote{that is considered secure under normal circumstances 
 %noTODO: more precise? Unforgeable under chosen blabla
@@ -103,12 +104,14 @@ Since the IoT consists of very different types of constrained nodes the IETF int
     \label{IoT-classes}
     \centering
     \caption{IETF IoT Classes}
-    \begin{tabular}{l | c c}
+    \begin{tabular}{|l | c c|}
+        \hline
         Class & RAM & Flash \\
         \hline
         C0 & $<<$ 10 KiB & $<<$ 100 KiB\\
         C1 & ~ 10 KiB & ~ 100 KiB\\
         C2 & ~ 50 KiB & ~ 250 KiB\\
+        \hline
     \end{tabular} 
 \end{table}
 
@@ -158,7 +161,8 @@ Those classes can be seen in table \ref{QR-classes}
     \label{QR-classes}
     \centering
     \caption{QR Security classes and their traditional counterparts as classified by the NIST}
-    \begin{tabular}{l | c}
+    \begin{tabular}{|l | c|}
+        \hline
         Class & security compareable to \\
         \hline
         1 & AES-128 \\
@@ -166,6 +170,7 @@ Those classes can be seen in table \ref{QR-classes}
         3 & AES-192 \\
         4 & SHA384 \\
         5 & AES-256 \\
+        \hline
     \end{tabular} 
 \end{table}
 
@@ -272,7 +277,7 @@ And as already mentioned in the previous section it is multivariate based.
 
 Since this sparsity of alternatives we we also focus on hash and lattice based signatures in this paper.
 
-\subsubsection{Hash Based Signatures (HBS)}
+\subsubsection{Hash Based Signatures (HBS)}\label{HBS}
 Hash based signatures have their security based upon the hardness of reversing Hashes or one-way functions.
 The most easy one is the Lamport one time signature (OTS).\cite{QR_algs} 
 That signature has essentially two private keys for every bit in the message digest. 
@@ -377,8 +382,12 @@ The most prominent LBS was called BLISS.
 Suhail et al. then compared these two implementation and measured their performance.
 BLISS (the LBS) was evaluated on a common IoT processor with ARMs M4 architecture while SPHINCS (the HBS) was evaluated on a intel XEON server processor. Still BLISS performed considerably better with exception of the key sizes. Results of their measurements are shown in table \ref{t:sphincsVSbliss}.
 
-\begin{table}[htbp]
-    \centering\begin{tabular}{r | c  c}
+\begin{table}[]
+    \centering
+    \caption{Measurement results of comparing BLISS on M4 with SPHINCS on intel XEON as of \cite{QR_sigs}}
+    \label{t:sphincsVSbliss}
+    \begin{tabular}{|r | c  c|}
+        \hline
         Metric & SPHINCS results & BLISS results\\
         \hline
         Signature clock-cycles & 50 million & 5.9 million \\
@@ -386,9 +395,8 @@ BLISS (the LBS) was evaluated on a common IoT processor with ARMs M4 architectur
         Public key size & 1KB & 7KB \\
         Private key size & 1KB & 2KB \\
         Signature size & 41KB & 960 bytes \\
+        \hline
     \end{tabular}
-    \caption{Measurement results of comparing BLISS on M4 with SPHINCS on intel XEON as of \cite{QR_sigs}}
-    \label{t:sphincsVSbliss}
 \end{table}
 
 We can therefor compare and somewhat conclude the pros and cons of LBS compared to HBS.
@@ -435,10 +443,13 @@ Another memory differentiation that might be more relevant for future differenti
 For stateful schemes we need persistant writeable memory and probably quite a lot of it while stateless schemes typically require more computing time for every signature. Which brings us to the main metrics:
 
 For each algorithm (GEN, SIGN,VER) we are interested in RAM/cache usage, execution time/energy consumption.
-We are also interested of of different sizes that need to be either stored or transmitted vie the network, these are signature as well as private and public key sizes.
+The significance of SIGN and VER performance is pretty obvious, but the GEN is also not to be forgotten since we have shown that most schemes either need to switch the keys because they leak over time or are simply just MTS signatures i.e. have to switch keys after a fixed amount of signatures, this amount is also influenced by available storage/time as we have shown in section \ref{HBS} with the merkle tree based signatures.
+We are also interested of of different sizes that need to be either stored or transmitted vie the network, these are signature as well as private and public key sizes. In many schemes these sizes have been unusually big \cite{QR_comparison}.
 The overall needed ROM for any algorithm is also from great interest since this is needed to say whether a scheme is applicable for different classes of IoT nodes as mentioned in section \ref{bg:iot}.
 
+Another thing regarding these classes that we might want to mention is, that there is no Quantum Computer with even nearly sufficiently sized quantum registers yet and probably will not be in only a few years. Therefor it is probable that when these quantum computers exist, the IoT and their hardware will also have gotten much better. Still the right signature schemes are needed, but it might be okay to be a few kilobytes larger than these classes.  
 
+\subsection{comparison of different signatures}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 Stack usage:
     name            & KeyGen    & Sign  & Verify
@@ -463,6 +474,64 @@ Hash-Based Sphincs promising since stateless, but many parameters to set \cite{Q
 
 as of \cite{QR_comparison} only schemes (out of ~50) with < 4kbit: SIKE and Round5 
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
+Since we now know what to look out for we can now compare results of measurements from different QR signature implementations.
+In this comparison we already focused on schemes that could be relevant for the IoT (i.e. skipped schemes that had way to much memory/cpu usage).
+The measurements seen in tables \ref{t:stack_comp} and \ref{t:clockcycles_comp}
+where performed by \cite{QR_comparison},\cite{Energy_comp} and \cite{update_sign}
+
+\begin{table}%[htbp]
+    \caption{Comparison of Stack usages for different schemes and their operations ( - means that it has not bean measured while / means not applicable)}
+    \label{t:stack_comp}
+    \centering\begin{tabular}{| r | c c c |}
+        \hline
+        Implementation name                     & GEN (bytes) & SIGN (bytes) & VER (bytes)\\
+        \hline
+        Dilithium-3 \cite{QR_Iot_Lattice}       & 50k       & 86k   & 54k\\
+        2021 Dilithium(dyn)\cite{update_sign}   & -         & 52k   & 36k\\
+        2021 Dilithium(sta)\cite{update_sign}   & / \footnote{in the case of static Dilithium the keys where precomputed and directly stored in flash} & 35k   & 19k\\ %TODO: footnote visable?
+        qTESLA-1 \cite{QR_Iot_Lattice}          & 22k       & 29k   & 23k\\
+        qTESLA-3 \cite{QR_Iot_Lattice}          & 43k       & 28k   & 45k\\
+        Falcon-5  \cite{QR_Iot_Lattice}         & 120k      & 120k  & 120k\\
+        2021 FALCON \cite{update_sign}          & -         & 42k   & 4.7k\\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}%[htbp]
+    \caption{Comparison of clock cycles needed for the operations of different implementations, perfomed on ARM M4 chip which was clocked at 168Mhz therefor 10 million clockcycles equal roughly 60ms. Each value is a million clock cycles}
+    \label{t:clockcycles_comp}
+    \centering\begin{tabular}{| r | c c c |}
+        \hline
+        Implementation name                     & GEN           & SIGN         & VER \\
+        \hline
+        Dilithium-3 \cite{QR_Iot_Lattice}       & 2.3           & 8.3          & 2.3 \\
+        Dilithium-3 \cite{Energy_comp}          & 2.1           & 7.2          & 2.1 \\ %TODO unclear major differences betwwen different measurements, should have conducted my own but no time -> future work
+        2021 Dilithium(dyn)\cite{update_sign}   & -             & 29           & 3.4\\
+        2021 Dilithium(sta)\cite{update_sign}   & -             & 8            & 1.5\\
+        qTESLA-3 \cite{QR_Iot_Lattice}          & 30            & 11           & 2.2\\
+        Falcon-5 \cite{QR_Iot_Lattice}          & 365           & 165          & 1\\
+        2021 Falcon  \cite{update_sign}         & -             & 75           & 1\\
+        \hline
+    \end{tabular}
+    
+\end{table}
+
+Unfortunately i could not find any reliable data about compiled code size \footnote{And i did not have enough resources left to measure it on my own, this could be part of future comparison research} (i.e. ROM usage) which is an important parameter, but the official NIST competition reference implementations \cite{nist_finalists_website} can give us a rough idea if we have a look how big the source code files are.
+
+\begin{table}[htbp]
+    \caption{uncompiled code size of reference implementations (different security levels (like Dilithium-3 and Dilithium-5) do not have any static changes reflected in code size)}
+    \label{t:codesize_comp}
+    \centering\begin{tabular}{| r | c |}
+        \hline
+        Scheme & Size\\
+        \hline
+        FALCON & 372KB \\
+        Dilithium & 270KB\\
+        SPHINCS+ & 180KB\\
+
+        \hline
+    \end{tabular}
+\end{table}
 
 
 %\subsection{Failed Signatures}
