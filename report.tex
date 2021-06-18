@@ -648,6 +648,8 @@ With these properties we can now create a first simple lattice based signature s
         \end{enumerate}
     \end{algorithm}
 
+\subsection{FALCON}
+
 This is however not implemented one-by-one into FALCON, because of two main issues.
 
 The first one is that we need a high dimensional lattice (to not be prone to LLL Lattice Reduction) and an arbitrary basis lies in $\mathcal{O}(n^2)$ which would result in unfeasable Megabyte-sized keys.
@@ -656,6 +658,11 @@ The solution to this problem is to not use any arbitrary bases but introduce som
 The second problem (compare section \ref{LBS}) is the continueous leakage of our private key from signature to signature that arises through usage of algorithm \label{alg:babel}. Thats because in this algorithm the shape of the CV is directly related to the shape of the private basis.
 To mitigate this issue a random sampling is introduced. It is called the GPV sampler \cite{falcon_easyier_read} and it works by not rounding to the closest integer but randomly rounds up or down.
 FALCON also improved this sampling process by applying Fast Fourier Sampling which sped up the process by orders of magnitude but as later figured out introduced a new vulnerability. 
+
+The new problem lies in the use of the floating point unit for the fast fourier calculations. This is not only a problem since many IoT devices dont have a floating point unit, but it also introduced a side-channel attack vulnerability.
+Floating Point Arithmetics (FPA) are known to be prone to side-channel attacks however in this case it has a somewhat severe impact.
+
+FALCON was side channel attacked by measuring electromagnetic radiation created by the FFT inside the sampler which uses the floating point unit. Such that the attacker could reconstruct the private key after only 10k measurements \cite{falcon_side_channel}. Therefor another fork af falcon, zalcon was introduced which ditches FPA (also good for other iot devices) and uses NTT instead of FTT \cite{zalcon}. However this NTT seems to be even more vulnerable to this attack\cite{falcon_side_channel}. A fix for this vulnerability though could be to introduce a masking s.t. power consumption etc. is more randomized. This would be a rather standard approach to mitigate this FPA Side-Channel Attack.
 
 \section{Conclusion}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
