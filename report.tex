@@ -516,9 +516,10 @@ where performed by \cite{QR_comparison},\cite{Energy_comp} and \cite{update_sign
     
 \end{table}
 
-Unfortunately i could not find any reliable data about compiled code size \footnote{And i did not have enough resources left to measure it on my own, this could be part of future comparison research} (i.e. ROM usage) which is an important parameter, but the official NIST competition reference implementations \cite{nist_finalists_website} can give us a rough idea if we have a look how big the source code files are.
 
-\begin{table}[htbp]
+Unfortunately i could not find any reliable data about compiled code size \footnote{And i did not have enough resources left to measure it on my own, this could be part of future comparison research} (i.e. ROM usage) which is an important parameter, but the official NIST competition reference implementations \cite{nist_finalists_website} can give us a rough idea if we have a look how big the source code files are. This is shown in table \ref{t:codesize_comp}.
+
+\begin{table}%[htbp]
     \caption{uncompiled code size of reference implementations (different security levels (like Dilithium-3 and Dilithium-5) do not have any static changes reflected in code size)}
     \label{t:codesize_comp}
     \centering\begin{tabular}{| r | c |}
@@ -532,6 +533,24 @@ Unfortunately i could not find any reliable data about compiled code size \footn
         \hline
     \end{tabular}
 \end{table}
+
+\begin{table}[p]
+    \caption{Comparison of key and signature sizes}
+    \label{t:key_sig_comp}
+    \centering\begin{tabular}{|r|c c c|}
+        \hline
+        Scheme & public key & signature \\
+        \hline
+        SPHINCS     & 1KB   & 43KB \\
+        Dilithium-3 & 1.4KB & 2.7KB\\
+        FALCON-1    & 900B  & 960B\\
+        FALCON-5    & 1.7KB & 1.3KB\\
+        \hline
+        ECDSA       & 64B   & 64B\\
+    \end{tabular}
+\end{table}
+
+After comparing all these signatures and keeping in mind that only Rainbow (implemented in python, not quite ready for IoT), Falcon and Dilithium became successful finalists \cite{nist_finalists_website}, we can conclude that there are different schemes with their own strengths and weaknesses.
 
 
 %\subsection{Failed Signatures}
@@ -548,7 +567,7 @@ wahrscheinlich skippen da mir da hintergrund zu braid groups etc fehlt
 not in the endgame but also not broken afaik
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
-\section{FALCON}\label{falcon}0
+\section{FALCON}\label{falcon}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 falcon-512 (L1):
 pubk/sig 897/690 bytes (dil3: 1472/2701 ecdsa: 64)
