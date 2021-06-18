@@ -54,6 +54,17 @@
 
     %% Signatures 
 
+        %falcon vs dilithium vs rainbow vs quantum annealers an computers
+        https://link.springer.com/chapter/10.1007/978-3-030-78375-4_17
+        @inproceedings{springer_security_analyses,
+        title={Security Comparisons and Performance Analyses of Post-quantum Signature Algorithms},
+        author={Raavi, Manohar and Wuthier, Simeon and Chandramouli, Pranav and Balytskyi, Yaroslav and Zhou, Xiaobo and Chang, Sang-Yoon},
+        booktitle={International Conference on Applied Cryptography and Network Security},
+        pages={424--447},
+        year={2021},
+        organization={Springer}
+        }
+
         %QR Sig Scheme: WALNUTDSA
         https://veridify.com/wp-content/uploads/2018/12/WP-walnutdsa-08-2018.pdf
         @misc{WalnutDSA,  author       = {IRIS ANSHEL and DEREK ATKINS and DORIAN GOLDFELD and PAUL E. GUNNELLS},  title        = {WALNUTDSATM: A QUANTUM-RESISTANT DIGITAL SIGNATURE ALGORITHM},  howpublished = {\url{https://veridify.com/wp-content/uploads/2018/12/WP-walnutdsa-08-2018.pdf}},  year         = {2018}  }}
@@ -77,7 +88,7 @@
         %%Falcon (depth)
 
             https://pqshield.com/falcon-a-post-quantum-signature-scheme/
-            easier read
+            easier read % TODO
 
             %Overview and use cases - falcon dilithium
             https://eprint.iacr.org/2019/1276.pdf
@@ -90,6 +101,18 @@
             %BEARZ vs Falcon
             https://www.scitepress.org/Papers/2019/78348/78348.pdf
             @conference{bearz, author={Sarah McCarthy. and James Howe. and Neil Smyth. and Séamus Brannigan. and Máire O’Neill.}, title={BEARZ Attack FALCON: Implementation Attacks with Countermeasures on the FALCON Signature Scheme}, booktitle={Proceedings of the 16th International Joint Conference on e-Business and Telecommunications - SECRYPT,}, year={2019}, pages={61-71}, publisher={SciTePress}, organization={INSTICC}, doi={10.5220/0007834800610071}, isbn={978-989-758-378-0}, issn={2184-2825}, }}
+
+            @article{falcon_side_channel,
+                title={Falcon Down: Breaking Falcon Post-Quantum Signature Scheme through Side-Channel Attacks},
+                author={Karabulut, Emre and Aysu, Aydin}
+                }
+
+            Falcon without floating points - less prone to Side channel attacks 
+            @article{zalcon,
+            title={Zalcon: An Alternative FPA-free NTRU Sampler for Falcon},
+            author={Fouque, Pierre-Alain and G{\'e}rard, Fran{\c{c}}ois and Rossi, M{\'e}lissa and Yu, Yang}
+            }
+
 
     (width)
     @misc{PQClean-GH, 

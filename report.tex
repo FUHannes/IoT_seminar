@@ -534,10 +534,10 @@ Unfortunately i could not find any reliable data about compiled code size \footn
     \end{tabular}
 \end{table}
 
-\begin{table}[p]
+\begin{table}%[]
     \caption{Comparison of key and signature sizes}
     \label{t:key_sig_comp}
-    \centering\begin{tabular}{|r|c c c|}
+    \centering\begin{tabular}{ | r | c c c | }
         \hline
         Scheme & public key & signature \\
         \hline
@@ -547,11 +547,15 @@ Unfortunately i could not find any reliable data about compiled code size \footn
         FALCON-5    & 1.7KB & 1.3KB\\
         \hline
         ECDSA       & 64B   & 64B\\
+        \hline
     \end{tabular}
 \end{table}
 
 After comparing all these signatures and keeping in mind that only Rainbow (implemented in python, not quite ready for IoT), Falcon and Dilithium became successful finalists \cite{nist_finalists_website}, we can conclude that there are different schemes with their own strengths and weaknesses.
-
+But in conclusion we can see that Dilithium shines on the signing side while FALCON performs by far the best when it comes to verification, which is especially useful on actor nodes or other nodes that primarily need to verify received data e.g. for updates.
+While Dilithium would be better in use-cases where sensitive data has to be signed.
+But, all these schemes are stateless and both Dilithium and FALCON (as well as qTesla) are lattice based schemes, the last finalist, Rainbow is code based, and as we can also see from the enormous signature size SPHINCS is the only hash based contender, but did not make it to the finalists.
+It was also observed that FALCON and Dilithium have the best security against quantum computers and annealers to computational expenses ratio \cite{springer_security_analyses}. We will therefor focus on these schemes in the following sections.
 
 %\subsection{Failed Signatures}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
@@ -562,12 +566,12 @@ After comparing all these signatures and keeping in mind that only Rainbow (impl
 wahrscheinlich skippen da mir da hintergrund zu braid groups etc fehlt
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
-\subsection{qTESLA}
+%\subsection{qTESLA}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 not in the endgame but also not broken afaik
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
-\section{FALCON}\label{falcon}
+\section{FALCON and Dilithium}\label{falcon}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 falcon-512 (L1):
 pubk/sig 897/690 bytes (dil3: 1472/2701 ecdsa: 64)
@@ -579,6 +583,8 @@ pubk/sig 1793/1330 bytes
 keygen: 380m clk , 232mJ
 sign/ver: 45.5/0.69 mJ
 \cite{Energy_comp}
+
+FALCON was side channel attacked by measuring electromagnetic radiation on the FFT inside the sampler which uses the floating point unit, could reconstruct privk after 10k measurements \cite{falcon_side_channel}  therefor zalcon was introduced which ditches FPA (also good for other iot devices) and uses NTT instead of FTT \cite{zalcon} but this seems to be even worse \cite{falcon_side_channel}, still one could implement masking to randomize power consumption etc.
 
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
