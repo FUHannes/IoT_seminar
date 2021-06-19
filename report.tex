@@ -609,7 +609,19 @@ If we also take energy consumption into consideration (see table \ref{t:falconVS
 \end{table*}
 
 \subsection{Dilithium}
+\comment{ %%%%%%%% NOTES %%%%%%%%%%%
+FALCOn reaches small pubk and sig since usage of gaussian sampling, - also makes signing hard, dilithium doesnt
 
+runs in constant time - no timing attacks possible \cite{Dilithium}
+
+} %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
+
+Dilithium's main idea is similar to the one used by FALCON, with the main difference being that it ditches the gauss sampler.
+This sampler is the main reason FALCON can achieve such small public keys and signatures, but it also makes the implementation a lot complexer and the signature step much harder, as we have seen in the previous section. 
+Since Dilithium ditches this step for another more trivial step, it makes signing much faster and easier while also reducing the code sizes needed to store this scheme on any device, making it possible to be only a small part even on a C0 device. However neither signing nor verifying would work on a C1 device, while all would work on a C2 Device which is already good.
+Another advantage of ditching this sampling is that it enabled the Dilithium team to focus on making the whole scheme constant-time. This inturn makes timing attacks as these that FALCON is vulnerable to impossible by design. \cite{Dilithium}
+
+%TODO: use case paper lesen und einarbeiten dann conclusion und abstract und fertig is
 
 \section{Conclusion}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
@@ -618,6 +630,9 @@ If we also take energy consumption into consideration (see table \ref{t:falconVS
 - smart home, smart campus, smart city
 - quantum key distribution
 \cite{QR_comparison}
+
+Dilithium when signing and verification often needed
+Falcon if only very since hard part is gaussian smapling which can be omitted on ver
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
 \bibliographystyle{IEEEtran}
