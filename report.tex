@@ -142,6 +142,9 @@ We therefor need to consider a few measures that make schemes more or less secur
 
 \subsection{Performance Metrics}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
+%TODO:
+\cite{springer_security_analyses}:
+Qubit cost, Quantum Gate cost
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
 Some performance metrics exist in QR schemes as well as in classic schemes.
@@ -154,7 +157,7 @@ This is not particularly relevant in most cases, as methods can be used to creat
 But it is relevant in the case of the IoT, since those methods require extra memory which is sparse in IoT-devices. Additionally they tend to make the signatures themselves longer, which also is not preferable in the IoT. \cite{QR_algs}
 
 Additionally to more traditional performance metrics we somehow need to measure the security of given schemes against an attack by a quantum computer.
-Sadly there is currently no standard benchmark to measure quantum resistance \cite{QR_comparison}, nevertheless the NIST created a standard that describes how secure a scheme is against a quantum computer by classifying it within 5 classes that can be determined with grovers algorithm \cite{QR_Iot_Lattice,Energy_comp}.
+Sadly there is currently no standard benchmark to measure quantum resistance \cite{QR_comparison}, nevertheless the National Institute of Science and Technology (NIST) created a standard that describes how secure a scheme is against a quantum computer by classifying it within 5 classes that can be determined with grovers algorithm \cite{QR_Iot_Lattice,Energy_comp}.
 Those classes can be seen in table \ref{QR-classes}
 
 \begin{table}
@@ -196,7 +199,7 @@ The most researched one is called McEliece and even has quite fast ($100 \mu s$)
 The main problem is, that the `shuffling' is realized through $k*n$ matrices that are generally big (millions of bits) and therefor unfeasible for constrained IoT devices.
 
 The second one will be discussed in greater detail in section \ref{QR signatures}, since it is also used as one of the main problems for signature schemes.
-Those schemes are called lattice based and also have some implementation with the most famous for encryption being NTRUEncrypt.
+Those schemes are called lattice based and also have some implementation with the most famous for encryption being NTRUEncrypt\footnote{NTRU is short for N-th Degree Truncated Polynomial Ring, also NTRUEncrypt might pop up the most, but the two main contenders for actual future use are FALCON (which also uses NTRU) and Dilithium}.
 
 \subsection{Signatures} \label{QR signatures}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
@@ -423,14 +426,14 @@ where performed by \cite{QR_comparison},\cite{Energy_comp} and \cite{update_sign
         2021 Dilithium(sta)\cite{update_sign}   & -             & 8            & 1.5\\
         qTESLA-3 \cite{QR_Iot_Lattice}          & 30            & 11           & 2.2\\
         Falcon-5 \cite{QR_Iot_Lattice}          & 365           & 165          & 1\\
-        2021 Falcon  \cite{update_sign}         & -             & 75           & 1\\
+        2021 Falcon  \cite{update_sign}         & -             & 75           & 1 \footnote{after optimizations these could be improved by further 43\% \cite{falcon_micro_impl}}\\
         \hline
     \end{tabular}
     
 \end{table}
 
 
-Unfortunately i could not find any reliable data about compiled code size \footnote{And i did not have enough resources left to measure it on my own, this could be part of future comparison research} (i.e. ROM usage) which is an important parameter, but the official NIST competition reference implementations \cite{nist_finalists_website} can give us a rough idea if we have a look how big the source code files are. This is shown in table \ref{t:codesize_comp}.
+Unfortunately i could not find any reliable data about compiled code size \footnote{And i did not have enough resources left to measure it on my own, this could be part of future comparison research} (i.e. ROM usage) except for Dilithium and FALCON which is shown in table \ref{t:flashsize_comp  } which is an important parameter, but the official NIST competition reference implementations \cite{nist_finalists_website} can give us a rough idea if we have a look how big the source code files are. This is shown in table \ref{t:codesize_comp}.
 
 \begin{table}%[htbp]
     \caption{uncompiled code size of reference implementations (different security levels (like Dilithium-3 and Dilithium-5) do not have any static changes reflected in code size)}
@@ -443,6 +446,20 @@ Unfortunately i could not find any reliable data about compiled code size \footn
         Dilithium & 270KB\\
         SPHINCS+ & 180KB\\
 
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}%[htbp]
+    \caption{Flash sizes)}
+    \label{t:flashsize_comp}
+    \centering\begin{tabular}{| r | c |}
+        \hline
+        Scheme & Size \\
+        \hline
+        FALCON & 57KB \\
+        2021 Dilithium (Dyn) & 11KB\\
+        2021 Dilithium (Sta) & 26KB\\
         \hline
     \end{tabular}
 \end{table}
@@ -569,6 +586,8 @@ The new problem lies in the use of the floating point unit for the fast fourier 
 Floating Point Arithmetics (FPA) are known to be prone to side-channel attacks however in this case it has a somewhat severe impact.
 
 FALCON was side channel attacked by measuring electromagnetic radiation created by the FFT inside the sampler which uses the floating point unit. Such that the attacker could reconstruct the private key after only 10k measurements \cite{falcon_side_channel}. Therefor another fork af falcon, zalcon was introduced which ditches FPA (also good for other iot devices) and uses NTT instead of FTT \cite{zalcon}. However this NTT seems to be even more vulnerable to this attack\cite{falcon_side_channel}. A fix for this vulnerability though could be to introduce a masking s.t. power consumption etc. is more randomized. This would be a rather standard approach to mitigate this FPA Side-Channel Attack.
+Besides this timing attack another team \cite{bearz} created a fault attack that could also retrieve the private key, but they propose a countermeasure for this is detecting the fault attack by verifying the own signature, which can take further advantage of FALCONs fast (~3ms) verification time.
+
 
 \section{Conclusion}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
