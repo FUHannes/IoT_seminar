@@ -433,7 +433,7 @@ where performed by \cite{QR_comparison},\cite{Energy_comp} and \cite{update_sign
 \end{table}
 
 
-Unfortunately i could not find any reliable data about compiled code size \footnote{And i did not have enough resources left to measure it on my own, this could be part of future comparison research} (i.e. ROM usage) except for Dilithium and FALCON which is shown in table \ref{t:flashsize_comp  } which is an important parameter, but the official NIST competition reference implementations \cite{nist_finalists_website} can give us a rough idea if we have a look how big the source code files are. This is shown in table \ref{t:codesize_comp}.
+Unfortunately i could not find any reliable data about compiled code size \footnote{And i did not have enough resources left to measure it on my own, this could be part of future comparison research} (i.e. ROM usage) except for Dilithium and FALCON which is shown in table \ref{t:flashsize_comp} which is an important parameter, but the official NIST competition reference implementations \cite{nist_finalists_website} can give us a rough idea if we have a look how big the source code files are. This is shown in table \ref{t:codesize_comp}.
 
 \begin{table}%[htbp]
     \caption{uncompiled code size of reference implementations (different security levels (like Dilithium-3 and Dilithium-5) do not have any static changes reflected in code size)}
@@ -467,13 +467,13 @@ Unfortunately i could not find any reliable data about compiled code size \footn
 \begin{table}%[]
     \caption{Comparison of key and signature sizes}
     \label{t:key_sig_comp}
-    \centering\begin{tabular}{ | r | c c c | }
+    \centering\begin{tabular}{ | r | c c | }
         \hline
         Scheme & public key & signature \\
         \hline
         SPHINCS     & 1KB   & 43KB \\
         Dilithium-3 & 1.4KB & 2.7KB\\
-        FALCON-1    & 900B  & 960B\\
+        FALCON-1    & 900B  & 690B\\
         FALCON-5    & 1.7KB & 1.3KB\\
         \hline
         ECDSA       & 64B   & 64B\\
@@ -551,7 +551,7 @@ With these properties we can now create a first simple lattice based signature s
 \begin{algorithm}
     \caption{Lattice SIGN}\label{alg:lattice sign v1}
         \begin{enumerate}
-            \item input message digest $M_i$ and already known private key beeing a lattice basis $b_\text{priv}$
+            \item input message digest $M_i$ and already known private key being a lattice basis $b_\text{priv}$
             \item genrate random seed $r$
             \item compute $u=h(M_i,r)$
             \item map $u$ to a $n$-dimensional vector $v_u$
@@ -563,7 +563,7 @@ With these properties we can now create a first simple lattice based signature s
 \begin{algorithm}
     \caption{Lattice VER}\label{alg:lattice ver v1}
         \begin{enumerate}
-            \item input signature $(r,s)$ and digest $M_i$ and already known public key beeing another lattice basis $b_\text{pub}$
+            \item input signature $(r,s)$ and digest $M_i$ and already known public key being another lattice basis $b_\text{pub}$
             \item abort if $s$ is not small (the vector is not close to the given digest vector)
             \item compute $u=h(M_i,r)$
             \item map $u$ to a $n$-dimensional vector $v_u$
@@ -575,18 +575,40 @@ With these properties we can now create a first simple lattice based signature s
 
 This is however not implemented one-by-one into FALCON, because of two main issues.
 
-The first one is that we need a high dimensional lattice (to not be prone to LLL Lattice Reduction) and an arbitrary basis lies in $\mathcal{O}(n^2)$ which would result in unfeasable Megabyte-sized keys.
+The first one is that we need a high dimensional lattice (to not be prone to LLL Lattice Reduction) and an arbitrary basis lies in $\mathcal{O}(n^2)$ which would result in unfeasible Megabyte-sized keys.
 The solution to this problem is to not use any arbitrary bases but introduce some kind of symmetry that makes the keys a lot smaller. This symmetry is introduced with the already mentioned NTRU-Lattice, which upscales only a few basis vectors to a high dimensional basis by applying specific rotations.
 
-The second problem (compare section \ref{LBS}) is the continueous leakage of our private key from signature to signature that arises through usage of algorithm \label{alg:babel}. Thats because in this algorithm the shape of the CV is directly related to the shape of the private basis.
+The second problem (compare section \ref{LBS}) is the continuous leakage of our private key from signature to signature that arises through usage of algorithm \label{alg:babel}. Thats because in this algorithm the shape of the CV is directly related to the shape of the private basis.
 To mitigate this issue a random sampling is introduced. It is called the GPV sampler \cite{falcon_easyier_read} and it works by not rounding to the closest integer but randomly rounds up or down.
 FALCON also improved this sampling process by applying Fast Fourier Sampling which sped up the process by orders of magnitude but as later figured out introduced a new vulnerability. 
 
-The new problem lies in the use of the floating point unit for the fast fourier calculations. This is not only a problem since many IoT devices dont have a floating point unit, but it also introduced a side-channel attack vulnerability.
+The new problem lies in the use of the floating point unit for the fast fourier calculations. This is not only a problem since many IoT devices do not have a floating point unit, but it also introduced a side-channel attack vulnerability.
 Floating Point Arithmetics (FPA) are known to be prone to side-channel attacks however in this case it has a somewhat severe impact.
 
 FALCON was side channel attacked by measuring electromagnetic radiation created by the FFT inside the sampler which uses the floating point unit. Such that the attacker could reconstruct the private key after only 10k measurements \cite{falcon_side_channel}. Therefor another fork af falcon, zalcon was introduced which ditches FPA (also good for other iot devices) and uses NTT instead of FTT \cite{zalcon}. However this NTT seems to be even more vulnerable to this attack\cite{falcon_side_channel}. A fix for this vulnerability though could be to introduce a masking s.t. power consumption etc. is more randomized. This would be a rather standard approach to mitigate this FPA Side-Channel Attack.
 Besides this timing attack another team \cite{bearz} created a fault attack that could also retrieve the private key, but they propose a countermeasure for this is detecting the fault attack by verifying the own signature, which can take further advantage of FALCONs fast (~3ms) verification time.
+
+To conclude FALCON would be a good contender for class C2 Devices and if only the verification part is needed it could also be used in C1 devices, which no other QR signature scheme can do. 
+
+If we also take energy consumption into consideration (see table \ref{t:falconVSdil}) we can see that FALCON really shines in verifying messages and is even super efficient on the highest security level. But the key generation takes a lot of energy which would be bad in battery operated environments. But even with a small 600mAH Battery that would still be around 34 thousand key generations before the battery is drained and since a single key can safely be reused for 10 million signatures that would result in 340 billion signatures made possible by pretty much the smallest available LiPO-cell. But a device would not even get close to this many signatures since signing with FALCON is way more energy intense then its competitor Dilithium.
+
+\begin{table*}[]
+    \caption{Direct comparison of FALCON and Dilithium on M4. \cite{Energy_comp}}
+    \label{t:falconVSdil}
+    \centering\begin{tabular}{ | r | c c c c c |}
+        \hline
+        Scheme & public key size & signature size & GEN Energy & SIGN Energy & VER Energy \\
+        \hline
+        Dilithium-3 (L2)    & 1472B & 2701B & 2.3mJ & 5mJ   & 1.7mJ \\
+        FALCON-512 (L1)     & 897B  & 690B  & 118mJ & 23mJ  & 0.3mJ \\
+        FALCON-1025 (L5)    & 1793B & 1330B & 232mJ & 35mJ  & 0.7mJ \\
+        \hline
+        ECDSA               & 64B   & 64B   & 1.7mJ & 4mJ   & 4mJ \\
+        \hline
+    \end{tabular}
+\end{table*}
+
+\subsection{Dilithium}
 
 
 \section{Conclusion}
