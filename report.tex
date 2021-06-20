@@ -32,8 +32,12 @@ hannes.hattenbach@fu-berlin.de}
 \maketitle
 
 \begin{abstract}
-    % TODO : abstract schreiben
+    % done : abstract schreiben
 %*CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, or Math in Paper Title or Abstract.
+Quantum computers are on the horizon to get to a sufficient size that will then be able to break pretty much all the encryption and signature schemes we currently use. This is the case for human interface devices as well as for IoT nodes. 
+In this paper i am comparing some signature schemes currently in the process of standardization by the NIST.
+After explaining the underlying basis on why some schemes are different in some aspects compared to others i will evaluate which currently available implementations are better suited for usage in IoT use-cases.
+We will come to further focus on the most promising schemes FALCON and Dilithium, which differ in one signifiant aspect that makes FALCON worse for signing but very good for verification purposes.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -48,7 +52,7 @@ Internet of Things, Quantum Resistance, Secure Signatures, Power Constraint Devi
 
 The quantum revolution is coming. With quantum computers\footnote{compare section \ref{l:quantum_computing}} on the way to get more and more functional, people are fearing a loss of their security and privacy.
 Or as \cite{QR_sigs} puts it, ``principles of data integrity, message authentication, and nonrepudiation, are going to have profound aftermath on sensory data in terms of security and privacy.''
-That is because there are algorithms based on Shors algorithm that can forge signatures and decrypt encrypted messages whos security is based on discrete logarithms, including elliptic curves or prime factorization, like our most common schemes Elliptic Curve Digital Signature Algorithm (ECDSA) and RSA respectively are.
+That is because there are algorithms based on Shors algorithm that can forge signatures and decrypt encrypted messages whose security is based on discrete logarithms, including elliptic curves or prime factorization, like our most common schemes Elliptic Curve Digital Signature Algorithm (ECDSA) and RSA respectively are.
 The quantum computer only needs access to the public keys of these asymmetric schemes.
 The expenditure to forge a signature\footnote{that is considered secure under normal circumstances 
 %noTODO: more precise? Unforgeable under chosen blabla
@@ -63,11 +67,11 @@ The IoT consist of low power devices with very few storage and computing power.
 
 In this paper i am going to evaluate existing signature schemes and their usage possibilities for the IoT regarding their performance metrics.
 
-Therefor i am going to give a small introduction and background to quantum computing, being a little more detailed about their ability to break current encryption and signature standards.
+Therefor i am going to give a small introduction and background to quantum computing, being a little more detailed about their ability to break current encryption and signature standards as well as on the internet of things.
 In the next section i will give an overview over current candidates for Quantum Resistant (QR) Algorithms and giving performance metrics for those.
+There i will give in overview on what kind of underlying mathematical problems QR algorithms rely on, with focus on the two most used kinds lattice and hash based schemes. 
 The following chapter will then focus on signature schemes in the IoT, starting with additional performance metrics relevant in the IoT.
-With a little more details about two failed signature schemes to highlight potential pitfalls. 
-And finally focussing on the best signature contender for the IoT so far: FALCON.
+And finally i will be focussing on the best signature contenders for the IoT so far: FALCON and Dilithium.
 
 \section{Background}\label{background}
 \subsection{Cryptography}\label{bg:crypto}
@@ -589,6 +593,7 @@ FALCON was side channel attacked by measuring electromagnetic radiation created 
 Besides this timing attack another team \cite{bearz} created a fault attack that could also retrieve the private key, but they propose a countermeasure for this is detecting the fault attack by verifying the own signature, which can take further advantage of FALCONs fast (~3ms) verification time.
 
 To conclude FALCON would be a good contender for class C2 Devices and if only the verification part is needed it could also be used in C1 devices, which no other QR signature scheme can do. 
+It is not super feasible in real-time scenarios for sensor networks though, since signing data can take about one whole second (compare table \ref{t:clockcycles_comp}).
 
 If we also take energy consumption into consideration (see table \ref{t:falconVSdil}) we can see that FALCON really shines in verifying messages and is even super efficient on the highest security level. But the key generation takes a lot of energy which would be bad in battery operated environments. But even with a small 600mAH Battery that would still be around 34 thousand key generations before the battery is drained and since a single key can safely be reused for 10 million signatures that would result in 340 billion signatures made possible by pretty much the smallest available LiPO-cell. But a device would not even get close to this many signatures since signing with FALCON is way more energy intense then its competitor Dilithium.
 
@@ -610,7 +615,7 @@ If we also take energy consumption into consideration (see table \ref{t:falconVS
 
 \subsection{Dilithium}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
-FALCOn reaches small pubk and sig since usage of gaussian sampling, - also makes signing hard, dilithium doesnt
+FALCON reaches small pubk and sig since usage of gaussian sampling, - also makes signing hard, dilithium doesnt
 
 runs in constant time - no timing attacks possible \cite{Dilithium}
 
@@ -621,7 +626,7 @@ This sampler is the main reason FALCON can achieve such small public keys and si
 Since Dilithium ditches this step for another more trivial step, it makes signing much faster and easier while also reducing the code sizes needed to store this scheme on any device, making it possible to be only a small part even on a C0 device. However neither signing nor verifying would work on a C1 device, while all would work on a C2 Device which is already good.
 Another advantage of ditching this sampling is that it enabled the Dilithium team to focus on making the whole scheme constant-time. This inturn makes timing attacks as these that FALCON is vulnerable to impossible by design. \cite{Dilithium}
 
-%TODO: use case paper lesen und einarbeiten dann conclusion und abstract und fertig is
+%noTODO: use case paper lesen und einarbeiten dann conclusion und abstract und fertig is
 
 \section{Conclusion}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
@@ -631,9 +636,25 @@ Another advantage of ditching this sampling is that it enabled the Dilithium tea
 - quantum key distribution
 \cite{QR_comparison}
 
+- similar performance as traditional and also implemented in TSL variant \cite{falcon_and_dilithium}
+
 Dilithium when signing and verification often needed
 Falcon if only very since hard part is gaussian smapling which can be omitted on ver
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
+
+To conclude we can see that there are two NIST finalist with promising performance even for the IoT, some performance improvement for specific platforms are still possible (like Dilithiums avx-2 vector optimizations), but even without those we have performance competitive with more traditional schemes like ECDSA.
+Both of them are lattice based, since the most used alternatives are hash based, which results in very big signatures by design.
+
+We had a look at multiple different schemes and their underlying mathematics and found that HBS are easier to understand and proof their security with only assuming hardness of pre image attacks for hashes. But we also found that their signatures get unfeasible big for IoT scenarios, therefor needing lattice based signatures, that offer better signature length performance on the downside of building their security on a less researched mathematical problem.
+
+Still the two LBS schemes further researched, FALCON and Dilithium would both fit on C2 IoT nodes and perform reasonably well on them.
+Besides memory constraints and FALCONs performance demands during signing due to the hardness of gauss sampling, they both have performance comparable or even better to more traditional non-QR schemes \cite{falcon_and_dilithium}. If we only want to verify messages FALCON would be an even better performer, since most of its hard part can be omitted, and signature sizes, public keys and verification hardness is very low.
+
+But FALCON still faces some issues on the signing side, since it is quite demand and not constant-time which inturn poses vulnerability against side channel attacks.
+Other attacks like fault injection etc still have to be evaluated for concrete implementations on concrete devices.
+Also the quantum-Resistance is based on the CVP, and quantum computing in general is still an active field of research and rapidly evolving.
+
+But with sufficiently large quantum computers on the horizon we need to make sure to quantum proof our smart homes, campuses and cities before it is to late.
 
 \bibliographystyle{IEEEtran}
 \bibliography{lit.bib, lit_specific.bib}
