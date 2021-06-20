@@ -347,12 +347,12 @@ BLISS (the LBS) was evaluated on a common IoT processor with ARMs M4 architectur
 \end{table}
 
 We can therefor compare and somewhat conclude the pros and cons of LBS compared to HBS.
-First of all it is to say, that HBS is already very well studied and bases its security upon already well established and praxis-tested Problems (Hashing), while Lattice based Security is still quite not new and in active research. It bases its security upon the CVP (or SVP) which itself is not studied that well, and a few vulnerabilities have already been shown \cite{QR_sigs}.
-Another comparison, less about the underlying mathematical problems, but more from an applicational standpoint, is also from interest - statefulness.
+First of all it is to say, that HBS is already very well studied and bases its security upon already well established and praxis-tested Problems (hashing), while lattice based Security is still quite new and in active research. It bases its security upon the CVP (or SVP) which itself is not studied that well, and a few vulnerabilities have already been shown \cite{QR_sigs}.
+Another comparison, less about the underlying mathematical problems, but more from an applicational standpoint, is also from interest: statefulness.
 We already know what stateful means, but Suhail et al. summarizes it rather well: 
-``stateful digital signature scheme necessitates the maintenance of the updated nonrepeated secret key upon each signature generation process. It is essential to keep track of nonrepeated key pairs, failing which will result in the degra- dation of the security of the cryptographic scheme'' 
+``stateful digital signature scheme necessitates the maintenance of the updated nonrepeated secret key upon each signature generation process. It is essential to keep track of nonrepeated key pairs, failing which will result in the degradation of the security of the cryptographic scheme'' 
 We can already see that this would be a problem in many use-cases.
-There are HBS schemes, like the above SPHINCS, that found a way to to make themselves stateless, but that comes with its own downsides, like in this case greatly increasing the key-generation expenses (compare table \ref{t:sphincsVSbliss}) , which is caused by using keys in a random order therefor making BDS optimization no longer applicable. %TODO: BDS?
+There are HBS schemes, like the above SPHINCS, that found a way to to make themselves stateless, but that comes with its own downsides, like in this case greatly increasing the key-generation expenses (compare table \ref{t:sphincsVSbliss}) , which is caused by using keys in a random order therefor making BDS\footnote{compare \cite{BDS_optim}} optimization no longer applicable. %_TODO: BDS?
 
 % TODO : can i somehow "hervorheben" this
 It can therefor be concluded that stateful schemes are great in processor power/time constrained use cases while stateless schemes trade computing power for storage used and are therefor better in memory constrained use-cases. \cite{QR_sigs}
@@ -375,31 +375,29 @@ First of all we need to establish what metrics we need to consider to evaluate w
 As mentioned in section \label{bg:iot} we have constraints in different fields. Those are primarily available energy therefor computing time and power as well as storage.
 The storage itself can also be split into read only memory (ROM) and writeable memory (RAM).
 Most operating systems (e.g. RIOT) split the available RAM again to expose two kinds of memory structures: stack and heap. These are often relevant since the stack and heap are used for different purposes, but since those are resizable at build time we wont focus on the differentiation between stack and heap.
-Another memory differentiation that might be more relevant for future differentiation between stateful and stateless schemes is between persistant and volatile memory. 
-For stateful schemes we need persistant writeable memory and probably quite a lot of it while stateless schemes typically require more computing time for every signature. Which brings us to the main metrics:
+Another memory differentiation that might be more relevant for future differentiation between stateful and stateless schemes is between persistent and volatile memory. 
+For stateful schemes we need persistent writeable memory and probably quite a lot of it while stateless schemes typically require more computing time for every signature. Which brings us to the main metrics:
 
 For each algorithm (GEN, SIGN,VER) we are interested in RAM/cache usage, execution time/energy consumption.
-The significance of SIGN and VER performance is pretty obvious, but the GEN is also not to be forgotten since we have shown that most schemes either need to switch the keys because they leak over time or are simply just MTS signatures i.e. have to switch keys after a fixed amount of signatures, this amount is also influenced by available storage/time as we have shown in section \ref{HBS} with the Merkle tree based signatures.
-We are also interested of of different sizes that need to be either stored or transmitted vie the network, these are signature as well as private and public key sizes. In many schemes these sizes have been unusually big \cite{QR_comparison}.
+The significance of SIGN and VER performance is pretty obvious, but the GEN is also not to be forgotten since we have shown that most schemes either need to switch the keys because they leak over time or are simply just MTS i.e. have to switch keys after a fixed amount of signatures, this amount is also influenced by available storage/time as we have shown in section \ref{HBS} with the Merkle tree based signatures.
+We are also interested in different sizes that need to be either stored or transmitted via the network, these are signature as well as private and public key sizes. In many schemes these sizes have been unusually big \cite{QR_comparison}.
 The overall needed ROM for any algorithm is also from great interest since this is needed to say whether a scheme is applicable for different classes of IoT nodes as mentioned in section \ref{bg:iot}.
 
-Another thing regarding these classes that we might want to mention is, that there is no Quantum Computer with even nearly sufficiently sized quantum registers yet and probably will not be in only a few years. Therefor it is probable that when these quantum computers exist, the IoT and their hardware will also have gotten much better. Still the right signature schemes are needed, but it might be okay to be a few kilobytes larger than these classes.  
+Another thing regarding these classes that we might want to mention is, that there is no quantum computer with even nearly sufficiently sized quantum registers yet and probably will not be in only a few years. Therefor it is probable that when these quantum computers exist, the IoT and their hardware will also have gotten much better. Still, the right signature schemes are needed, but it might be okay to be a few kilobytes larger than these classes.  
 
 \subsection{comparison of different signatures}
 \comment{ %%%%%%%% NOTES %%%%%%%%%%%
 Hash-Based Sphincs promising since stateless, but many parameters to set \cite{QR_IoT_Energy}
-
-% TODO: 
+ 
 as of \cite{QR_comparison} only schemes (out of ~50) with < 4kbit: SIKE and Round5 
 } %%%%%%%%%%%%%%%% END %%%%%%%%%%%%%
 
 Since we now know what to look out for we can now compare results of measurements from different QR signature implementations.
-In this comparison we already focused on schemes that could be relevant for the IoT (i.e. skipped schemes that had way to much memory/cpu usage).
-The measurements seen in tables \ref{t:stack_comp} and \ref{t:clockcycles_comp}
-where performed by \cite{QR_comparison},\cite{Energy_comp} and \cite{update_sign}
+In this comparison we already focused on schemes that could be relevant for the IoT (i.e. skipped schemes that had way to much memory/cpu usage or are to old, e.g. in \cite{QR_comparison} the only schemes that had below 4kB keys where SIKE and Round5, both of which did not make it to the NIST finalist).
+The measurements seen in tables \ref{t:stack_comp} and \ref{t:clockcycles_comp} were performed by \cite{QR_comparison},\cite{Energy_comp} and \cite{update_sign}
 
 \begin{table}%[htbp]
-    \caption{Comparison of Stack usages for different schemes and their operations ( - means that it has not bean measured while / means not applicable)}
+    \caption{Comparison of stack usages for different schemes and their operations ( - means that it has not bean measured while / means not applicable)}
     \label{t:stack_comp}
     \centering\begin{tabular}{| r | c c c |}
         \hline
@@ -417,7 +415,7 @@ where performed by \cite{QR_comparison},\cite{Energy_comp} and \cite{update_sign
 \end{table}
 
 \begin{table}%[htbp]
-    \caption{Comparison of clock cycles needed for the operations of different implementations, perfomed on ARM M4 chip which was clocked at 168Mhz therefor 10 million clockcycles equal roughly 60ms. Each value is a million clock cycles}
+    \caption{Comparison of clock cycles needed for the operations of different implementations, performed on ARM M4 chip which was clocked at 168Mhz therefor 10 million clock cycles equal roughly 60ms. Each value is a million clock cycles}
     \label{t:clockcycles_comp}
     \centering\begin{tabular}{| r | c c c |}
         \hline
@@ -540,7 +538,7 @@ Just imagine the most trivial case, a one dimensional lattice that consist of al
 If we now have a short basis (e.g. \{2\}) this algorithm for finding a close vector will represent $v$ as $12.34*\{2\}$ and then round to $12$ which would give us $12*\{2\}=\{24\}$ which is indeed a close vector, although not the closest, which would have been $\{25\}$ as we know.
 On the other hand, if we have a long basis (e.g. \{14\}) this algorithm for finding a close vector will represent $v$ as $1.72\dots*\{7\}$ and then round to $2$ which would give us $2*\{14\}=\{28\}$ which is not a close vector.
 Of course this example would not make any sense in a practical environment but it highlights why a short basis is good for solving CVP while a long one is not.
-But both bases are equally useful in verifying that a vector is indeed i lattice vector by simply checking if it can be represented by an integer multiple of our basis.
+But both bases are equally useful in verifying that a vector is indeed a lattice vector by simply checking if it can be represented by an integer multiple of our basis.
 With these properties we can now create a first simple lattice based signature scheme which is given by \{\ref{alg:lattice gen v1}, \ref{alg:lattice sign v1}, \ref{alg:lattice ver v1}\}.
 
 \begin{algorithm}
@@ -581,14 +579,17 @@ This is however not implemented one-by-one into FALCON, because of two main issu
 The first one is that we need a high dimensional lattice (to not be prone to LLL Lattice Reduction) and an arbitrary basis lies in $\mathcal{O}(n^2)$ which would result in unfeasible Megabyte-sized keys.
 The solution to this problem is to not use any arbitrary bases but introduce some kind of symmetry that makes the keys a lot smaller. This symmetry is introduced with the already mentioned NTRU-Lattice, which upscales only a few basis vectors to a high dimensional basis by applying specific rotations.
 
-The second problem (compare section \ref{LBS}) is the continuous leakage of our private key from signature to signature that arises through usage of algorithm \label{alg:babel}. Thats because in this algorithm the shape of the CV is directly related to the shape of the private basis.
+The second problem (compare section \ref{LBS}) is the continuous leakage of our private key from signature to signature that arises through usage of algorithm \label{alg:babel}. That is because in this algorithm the shape of the closest vector is directly related to the shape of the private basis.
 To mitigate this issue a random sampling is introduced. It is called the GPV sampler \cite{falcon_easyier_read} and it works by not rounding to the closest integer but randomly rounds up or down.
 FALCON also improved this sampling process by applying Fast Fourier Sampling which sped up the process by orders of magnitude but as later figured out introduced a new vulnerability. 
 
 The new problem lies in the use of the floating point unit for the fast fourier calculations. This is not only a problem since many IoT devices do not have a floating point unit, but it also introduced a side-channel attack vulnerability.
 Floating Point Arithmetics (FPA) are known to be prone to side-channel attacks however in this case it has a somewhat severe impact.
 
-FALCON was side channel attacked by measuring electromagnetic radiation created by the FFT inside the sampler which uses the floating point unit. Such that the attacker could reconstruct the private key after only 10k measurements \cite{falcon_side_channel}. Therefor another fork af falcon, zalcon was introduced which ditches FPA (also good for other iot devices) and uses NTT instead of FTT \cite{zalcon}. However this NTT seems to be even more vulnerable to this attack\cite{falcon_side_channel}. A fix for this vulnerability though could be to introduce a masking s.t. power consumption etc. is more randomized. This would be a rather standard approach to mitigate this FPA Side-Channel Attack.
+FALCON was side channel attacked by measuring electromagnetic radiation created by the FFT inside the sampler which uses the floating point unit. Such that the attacker could reconstruct the private key after only 10k measurements \cite{falcon_side_channel}. Therefor another fork af falcon, zalcon was introduced which ditches the FPA (also good for other iot devices) and uses NTT instead of FTT \cite{zalcon}. However this NTT seems to be even more vulnerable to this attack. \cite{falcon_side_channel} 
+
+A fix for this vulnerability though could be to introduce a masking s.t. power consumption etc. is more randomized. This would be a rather standard approach to mitigate this FPA Side-Channel Attack.
+
 Besides this timing attack another team \cite{bearz} created a fault attack that could also retrieve the private key, but they propose a countermeasure for this is detecting the fault attack by verifying the own signature, which can take further advantage of FALCONs fast (~3ms) verification time.
 
 To conclude FALCON would be a good contender for class C2 Devices and if only the verification part is needed it could also be used in C1 devices, which no other QR signature scheme can do. 
@@ -646,14 +647,14 @@ Both of them are lattice based, since the most used alternatives are hash based,
 
 We had a look at multiple different schemes and their underlying mathematics and found that HBS are easier to understand and proof their security with only assuming hardness of pre image attacks for hashes. But we also found that their signatures get unfeasible big for IoT scenarios, therefor needing lattice based signatures, that offer better signature length performance on the downside of building their security on a less researched mathematical problem.
 
-Still the two LBS schemes further researched, FALCON and Dilithium would both fit on C2 IoT nodes and perform reasonably well on them.
-Besides memory constraints and FALCONs performance demands during signing due to the hardness of gauss sampling, they both have performance comparable or even better to more traditional non-QR schemes \cite{falcon_and_dilithium}. If we only want to verify messages FALCON would be an even better performer, since most of its hard part can be omitted, and signature sizes, public keys and verification hardness is very low.
+Still the two LBS schemes that were further researched, FALCON and Dilithium would both fit on C2 IoT nodes and perform reasonably well on them.
+Besides memory constraints and FALCONs performance demands during signing due to the hardness of gauss sampling, they both have performance comparable or even better to more traditional non-QR schemes \cite{falcon_and_dilithium}. If we only want to verify messages FALCON would be an even better performer, since most of its hard part can be omitted, and signature sizes, public keys and verification hardness are very small.
 
-But FALCON still faces some issues on the signing side, since it is quite demand and not constant-time which inturn poses vulnerability against side channel attacks.
+But FALCON still faces some issues on the signing side, since it is quite demanding and not constant-time which inturn poses vulnerability against side channel attacks.
 Other attacks like fault injection etc still have to be evaluated for concrete implementations on concrete devices.
-Also the quantum-Resistance is based on the CVP, and quantum computing in general is still an active field of research and rapidly evolving.
+Also the quantum-resistance is based on the CVP, and quantum computing in general is still an active field of research and rapidly evolving.
 
-But with sufficiently large quantum computers on the horizon we need to make sure to quantum proof our smart homes, campuses and cities before it is to late.
+But with sufficiently large quantum computers on the horizon we need to make sure to quantum proof our smart homes, campuses and cities before it is to late. And FALCON as well as Dilithium seem to be reasonable contenders for that.
 
 \bibliographystyle{IEEEtran}
 \bibliography{lit.bib, lit_specific.bib}
