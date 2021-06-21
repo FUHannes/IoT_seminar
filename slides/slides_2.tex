@@ -1,6 +1,7 @@
 \documentclass[ucs,10pt]{beamer}
 \input{slides_head}
 
+
 \begin{document}
 
 \begin{frame}[plain]
@@ -12,7 +13,7 @@
   % You might wish to add the option [pausesections]
 \end{frame}
 
-\section{Introduction}
+\section{Motivation}
 
 \begin{frame}{Quantum Computing breaks ordinary Cryptography}
   % - A title should summarize the slide in an understandable fashion
@@ -30,15 +31,16 @@
   \item 
     not everything equally effected
     \begin{itemize}
-      \item schemes in standardization to replace current crypto
+      \item schemes in standardization to replace current cryptography
       \item some are rather computationally intense
+      \item that is why i have a deeper look on which are feasable for IoT
     \end{itemize}
   \end{itemize}
 \end{frame}
 
-\section{Motivation}
+\subsection{Quantum Computing}
 
-\begin{frame}{Quantum Computing breaks ordinary Encryption}
+\begin{frame}{Shors algorithm poses threat against asymmetric cryptography}
   % - A title should summarize the slide in an understandable fashion
   %   for anyone how does not follow everything on the slide itself.
   \begin{itemize}
@@ -54,31 +56,178 @@
     Algorithms can leverage those mechanics
     \begin{itemize}
       \item up to exponential speed up in some cases
-      \item Shors algorithm completely breaks common Encryption 
+      \item Shors algorithm completely breaks common asymmetric cryptography
       \begin{itemize}
-        \item everythink based on Number-Theory (like RSA, ECDSA, ..)
-        \item (Qubits are currently rather unstable $\rightarrow$ not broken yet)
+        \item can derive private key from public key
+        \item for everything based on Number-Theory (like RSA, ECDSA, ..)
+      \end{itemize}
+      \item  Grovers algorithm poses threat against symmetric crypto and hash-functions
+      \begin{itemize}
+        \item only quadratic speed-up
+        \item doubling length restores security (e.g. AES128 $\mapsto$ AES256)
       \end{itemize}
     \end{itemize}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Quantum Resistant Asymetric Encryption / Signatures}
 
+\begin{frame}{Shors algorithm poses threat against asymmetric cryptography}
+  % - A title should summarize the slide in an understandable fashion
+  %   for anyone how does not follow everything on the slide itself.
   \begin{itemize}
-  \item There are a few proposed solutions
-    
-  \item mostly based on Lattice-Based hard Problems
+  \item
+    Quantum Computers operate on Qubits instead of normal Bits
+  \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.2\textwidth]{../graphics/The-Bloch-sphere-provides-a-useful-means-of-visualizing-the-state-of-a-single-qubit-and.png}
+    \caption{Model of a Qubit \cite{img:bloch}}
+    \label{qubit}
+  \end{figure}
+  \item
+    Algorithms can leverage those mechanics
     \begin{itemize}
-    \item Frodo-Kem (Encryption)
-    \item FALCON (Signature)
-    \end{itemize}
-   
-  \item IOT also needs to be secured
-  \begin{itemize}
-    \item additional challenge of beeing low power/memory
+      \item up to exponential speed up in some cases
+      \item Shors algorithm completely breaks common asymmetric cryptography
+      \begin{itemize}
+        \item can derive private key from public key
+        \item for everything based on Number-Theory (like RSA, ECDSA, ..)
+      \end{itemize}
+      \item  Grovers algorithm poses threat against symmetric crypto and hash-functions
+      \begin{itemize}
+        \item only quadratic speed-up
+        \item doubling length restores security (e.g. AES128 $\mapsto$ AES256)
+      \end{itemize}
     \end{itemize}
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Shors and Grovers algorithms}
+    \begin{figure}[htbp]
+      \centering
+      \includegraphics[width=.7\textwidth]{../graphics/grover_circuit_3qubits.png}
+      \caption{Grovers Algorithm \cite{img:grover}}
+      \label{grover}
+    \end{figure}
+  
+    \begin{figure}[htbp]
+      \centering
+      \includegraphics[width=.5\textwidth]{../graphics/Shor's_algorithm.png}
+      \caption{Shors Algorithm\cite{img:shor}}
+      \label{shor}
+    \end{figure}
+
+\end{frame}
+
+\subsection{Internet of Things}
+
+\begin{frame}{Many ressource constrained devices}
+  % - A title should summarize the slide in an understandable fashion
+  %   for anyone how does not follow everything on the slide itself.
+  \begin{itemize}
+  \item
+    Internet of Things 
+  \item
+    Smart-devices that are actually pretty dumb
+    \begin{itemize}
+      \item little memory (kilobytes to megabytes)
+      \item low computing power (slow clock, small cache, etc.)
+      \item limited energy ressources (battery or solar operated)
+    \end{itemize}
+  \item
+    NIST classified into 3 classes:
+  \end{itemize}
+  \begin{table}
+    \label{IoT-classes}
+    \centering
+    \caption{IETF IoT Classes}
+    \begin{tabular}{|l | c c|}
+        \hline
+        Class & RAM & Flash \\
+        \hline
+        C0 & $<<$ 10 KiB & $<<$ 100 KiB\\
+        C1 & ~ 10 KiB & ~ 100 KiB\\
+        C2 & ~ 50 KiB & ~ 250 KiB\\
+        \hline
+    \end{tabular} 
+\end{table}
+\end{frame}
+
+\section{Quantum Resistant Signature Schemes}
+
+\subsection{Performance Metrics}
+\begin{frame}{What makes a signature scheme better than any other?}
+
+  \begin{itemize}
+  \item length of:
+  \begin{itemize}
+    \item signature
+    \item public key
+    \item private key
+  \end{itemize}
+    \item time and space needed to:
+    \begin{itemize}
+      \item generate keys (GEN)
+      \item sign a message (SIGN)
+      \item verify a message (VER)
+    \end{itemize}
+  \item security against quantum computers and traditional attackers
+  \begin{table}
+    \label{QR-classes}
+    \centering
+    \caption{QR Security classes and their traditional counterparts as classified by the NIST}
+    \begin{tabular}{|l | c|}
+        \hline
+        Class & security comparable to \\
+        \hline
+        1 & AES-128 \\
+        2 & SHA256 \\
+        3 & AES-192 \\
+        4 & SHA384 \\
+        5 & AES-256 \\
+        \hline
+    \end{tabular} 
+\end{table}
+\end{itemize}
+\end{frame}
+
+\subsection{different types}
+\begin{frame}{Multiple types of underlying mathematica problems}
+
+  \begin{itemize}
+    \item Super-singular isogeny based
+    \begin{itemize}
+      \item SIKE
+      \item not well studied
+    \end{itemize}
+    \item Multivariate polynomial based
+    \begin{itemize}
+      \item Rainbow
+      \item not well studied
+      \item involves guessing work $\rightarrow$ not suited for low power devices
+    \end{itemize}
+    \item Code based
+    \begin{itemize}
+      \item McEliece
+      \item no finalist
+    \end{itemize}
+    \item Hash based
+    \begin{itemize}
+      \item SPHINCS+ 
+      \item big signatures (see next slide)
+      \item very well studied
+    \end{itemize}
+    \item Lattice based
+    \begin{itemize}
+      \item FALCON, Dilithium
+      \item most promising
+      \item most NIST finalists
+      \item most efficient
+      \item not as proofed as HBS
+    \end{itemize}
+  \end{itemize}
+  
+
 \end{frame}
 
 
@@ -144,7 +293,8 @@
 \subsection{Ressources}
 \begin{frame}[allowframebreaks]{Ressources}
   \bibliographystyle{plain}
-  \bibliography{../lit}
+  %\bibliography{img}
+  \bibliography{img.bib, ../lit.bib}
 \end{frame}
 
 \subsection{Schedule}
