@@ -265,7 +265,7 @@
   \frametitle{different measurements, still many fluctuations since active research}
 
   \begin{table}%[htbp]
-    \caption{Comparison of stack usages for different schemes and their operations ( - means that it has not bean measured while / means not applicable)}
+    \caption{Stack usage}
     \label{t:stack_comp}
     \centering\begin{tabular}{| r | c c c |}
         \hline
@@ -273,7 +273,7 @@
         \hline
         Dilithium-3 \cite{QR_Iot_Lattice}       & 50k       & 86k   & 54k\\
         2021 Dilithium(dyn)\cite{update_sign}   & -         & 52k   & 36k\\
-        2021 Dilithium(sta)\cite{update_sign}   & / \footnote{in the case of static Dilithium the keys where precomputed and directly stored in flash} & 35k   & 19k\\ %done: footnote visable?
+        2021 Dilithium(sta)\cite{update_sign}   & / \footnote{precomputed key and directly stored in flash} & 35k   & 19k\\ %done: footnote visable?
         qTESLA-1 \cite{QR_Iot_Lattice}          & 22k       & 29k   & 23k\\
         qTESLA-3 \cite{QR_Iot_Lattice}          & 43k       & 28k   & 45k\\
         Falcon-5  \cite{QR_Iot_Lattice}         & 120k      & 120k  & 120k\\
@@ -283,7 +283,7 @@
 \end{table}
 
 \begin{table}%[htbp]
-    \caption{Comparison of clock cycles needed for the operations of different implementations, performed on ARM M4 chip which was clocked at 168Mhz therefor 10 million clock cycles equal roughly 60ms. Each value is a million clock cycles}
+    \caption{clock cycles}
     \label{t:clockcycles_comp}
     \centering\begin{tabular}{| r | c c c |}
         \hline
@@ -316,7 +316,7 @@
 \end{table}
 
 \begin{table}%[]
-    \caption{Comparison of key and signature sizes}
+    \caption{key and signature sizes}
     \label{t:key_sig_comp}
     \centering\begin{tabular}{ | r | c c | }
         \hline
