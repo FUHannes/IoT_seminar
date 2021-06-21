@@ -14,7 +14,7 @@
 \end{frame}
 
 \section{Motivation}
-
+%1
 \begin{frame}{Quantum Computing breaks ordinary Cryptography}
   % - A title should summarize the slide in an understandable fashion
   %   for anyone how does not follow everything on the slide itself.
@@ -39,48 +39,15 @@
 \end{frame}
 
 \subsection{Quantum Computing}
-
+%2
 \begin{frame}{Shors algorithm poses threat against asymmetric cryptography}
-  % - A title should summarize the slide in an understandable fashion
-  %   for anyone how does not follow everything on the slide itself.
-  \begin{itemize}
-  \item
-    Quantum Computers operate on Qubits instead of normal Bits
-  \item
-    Qubits are Quantum-Mechanical
-    \begin{itemize}
-      \item using spin of an electrons
-      \item Entanglement and Superposition
-    \end{itemize}
-  \item
-    Algorithms can leverage those mechanics
-    \begin{itemize}
-      \item up to exponential speed up in some cases
-      \item Shors algorithm completely breaks common asymmetric cryptography
-      \begin{itemize}
-        \item can derive private key from public key
-        \item for everything based on Number-Theory (like RSA, ECDSA, ..)
-      \end{itemize}
-      \item  Grovers algorithm poses threat against symmetric crypto and hash-functions
-      \begin{itemize}
-        \item only quadratic speed-up
-        \item doubling length restores security (e.g. AES128 $\mapsto$ AES256)
-      \end{itemize}
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-
-
-\begin{frame}{Shors algorithm poses threat against asymmetric cryptography}
-  % - A title should summarize the slide in an understandable fashion
-  %   for anyone how does not follow everything on the slide itself.
   \begin{itemize}
   \item
     Quantum Computers operate on Qubits instead of normal Bits
   \begin{figure}[htbp]
     \centering
     \includegraphics[width=.2\textwidth]{../graphics/The-Bloch-sphere-provides-a-useful-means-of-visualizing-the-state-of-a-single-qubit-and.png}
-    \caption{Model of a Qubit \cite{img:bloch}}
+    \caption{Model of a qubit \cite{img:bloch}}
     \label{qubit}
   \end{figure}
   \item
@@ -100,7 +67,7 @@
     \end{itemize}
   \end{itemize}
 \end{frame}
-
+%3
 \begin{frame}
   \frametitle{Shors and Grovers algorithms}
     \begin{figure}[htbp]
@@ -120,10 +87,8 @@
 \end{frame}
 
 \subsection{Internet of Things}
-
+%4
 \begin{frame}{Many ressource constrained devices}
-  % - A title should summarize the slide in an understandable fashion
-  %   for anyone how does not follow everything on the slide itself.
   \begin{itemize}
   \item
     Internet of Things 
@@ -137,24 +102,34 @@
   \item
     NIST classified into 3 classes:
   \end{itemize}
-  \begin{table}
-    \label{IoT-classes}
-    \centering
-    \caption{IETF IoT Classes}
-    \begin{tabular}{|l | c c|}
-        \hline
-        Class & RAM & Flash \\
-        \hline
-        C0 & $<<$ 10 KiB & $<<$ 100 KiB\\
-        C1 & ~ 10 KiB & ~ 100 KiB\\
-        C2 & ~ 50 KiB & ~ 250 KiB\\
-        \hline
-    \end{tabular} 
-\end{table}
+  \begin{minipage}[t]{0.4\textwidth}
+    \begin{table}
+      \label{IoT-classes}
+      \centering
+      \caption{IETF IoT Classes}
+      \begin{tabular}{|l | c c|}
+          \hline
+          Class & RAM & Flash \\
+          \hline
+          C0 & $<<$ 10 KiB & $<<$ 100 KiB\\
+          C1 & ~ 10 KiB & ~ 100 KiB\\
+          C2 & ~ 50 KiB & ~ 250 KiB\\
+          \hline
+      \end{tabular} 
+  \end{table}
+\end{minipage}
+\begin{minipage}[t]{0.4\textwidth}
+  \begin{figure}[htbp]
+    \centering\hspace*{1.5cm}
+    \includegraphics[width=3cm,angle=90,origin=l]{../graphics/ESP32-DevKitC-32D_t (1).png}
+    \caption{ESP32\cite{img:esp}}
+    \label{esp32}
+  \end{figure}
+\end{minipage}
 \end{frame}
 
 \section{Quantum Resistant Signature Schemes}
-
+%5
 \subsection{Performance Metrics}
 \begin{frame}{What makes a signature scheme better than any other?}
 
@@ -192,6 +167,7 @@
 \end{frame}
 
 \subsection{different types}
+%6
 \begin{frame}{Multiple types of underlying mathematica problems}
 
   \begin{itemize}
@@ -227,86 +203,198 @@
     \end{itemize}
   \end{itemize}
   
-
 \end{frame}
 
 
-\section{Structure}
-\subsection{Skeleton}
+\subsubsection{HBS}
+%7
+\begin{frame}
+  \frametitle{Hash Based Signatures}
 
-\begin{frame}{Skeleton}
   \begin{itemize}
-      \item Introduction
+    \item Bases security upon Pre-Image resistance (of hash-functions) \\$\rightarrow$Well-Studied
+    \item most simple form Lamport OTS: \begin{itemize}
+      \item private key: $2n$ random strings (two for each bit in digest)
+      \item public key: hash of these strings
+      \item sign by publishing one string for every bit in digest (either first or second)
+    \end{itemize}
+    \item only useable one-time $\rightarrow$ publish $x$ keys for $x$ private keys
+    \begin{itemize}
+      \item greatly improved by use of Merkle tree (no need for $x$ keys, only one public)
+      \item but increases signature size by $\log(x)$
+    \end{itemize}
     
-      \item Internet of Things
-      
-      \item Quantum Resistant Security
-          \begin{itemize}
-            \item Quantum Computing
-            \item QR Algorithms
-            \begin{itemize}
-              \item Performance Metrics
-              \item Encryption
-              \item Signatures
-            \end{itemize}
-          \end{itemize}
-      
-      \item QR Signatures in IoT 
-      \begin{itemize}
-        \item Performance Metrics in IoT
-        \item Failed Signatures
-        \begin{itemize}
-          \item WalnutDSA
-          \item qTESLA
-        \end{itemize}
-        \item FALCON
-      \end{itemize}
-      
-      
-      \item {Conclusion}
+  \end{itemize}
+
+\end{frame}
+
+\subsubsection{LBS}
+%8
+\begin{frame}
+  \frametitle{Lattice Based Signatures}
+
+  \begin{itemize}
+    \item Bases security upon hardness ov CVP
+    \begin{itemize}
+      \item find closest vector in a (High-$d$) Lattice
+      \item private key: short basis (red)
+      \item public key: long basis (black)
+      \item sign by providing a lattice vector close to a point on which the message would be mapped
+      \item hard with long basis but easy to verify
+    \end{itemize}
+    \item keys are giant since high $d$ requires $\mathcal{O}(d^2)$ scalars.
+    \item reduce by introducing symmetries (NTRU\footnote{N-th Degree TRUncated Polynomial Ring Units })
+    \item every signature leaks information about private key
+    \begin{itemize}
+      \item don't give closest vector, but a close enough one
+      \item best to use gauss-sampling, but cryptographically hard
+    \end{itemize}
+    
+  \end{itemize}
+  \begin{figure}[]
+    \centering
+    \includegraphics[height=3cm]{../graphics/1200px-Lattice-reduction.png}
+    \caption{a 2D-Lattice with two bases of different length \cite{img:lattice_bases}}
+    \label{lattice}
+  \end{figure}
+
+\end{frame}
+
+\section{Comparison}
+\begin{frame}[allowframebreaks]
+  \frametitle{different measurements, still many fluctuations since active research}
+
+  \begin{table}%[htbp]
+    \caption{Comparison of stack usages for different schemes and their operations ( - means that it has not bean measured while / means not applicable)}
+    \label{t:stack_comp}
+    \centering\begin{tabular}{| r | c c c |}
+        \hline
+        Implementation name                     & GEN (bytes) & SIGN (bytes) & VER (bytes)\\
+        \hline
+        Dilithium-3 \cite{QR_Iot_Lattice}       & 50k       & 86k   & 54k\\
+        2021 Dilithium(dyn)\cite{update_sign}   & -         & 52k   & 36k\\
+        2021 Dilithium(sta)\cite{update_sign}   & / \footnote{in the case of static Dilithium the keys where precomputed and directly stored in flash} & 35k   & 19k\\ %done: footnote visable?
+        qTESLA-1 \cite{QR_Iot_Lattice}          & 22k       & 29k   & 23k\\
+        qTESLA-3 \cite{QR_Iot_Lattice}          & 43k       & 28k   & 45k\\
+        Falcon-5  \cite{QR_Iot_Lattice}         & 120k      & 120k  & 120k\\
+        2021 FALCON \cite{update_sign}          & -         & 42k   & 4.7k\\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}%[htbp]
+    \caption{Comparison of clock cycles needed for the operations of different implementations, performed on ARM M4 chip which was clocked at 168Mhz therefor 10 million clock cycles equal roughly 60ms. Each value is a million clock cycles}
+    \label{t:clockcycles_comp}
+    \centering\begin{tabular}{| r | c c c |}
+        \hline
+        Implementation name                     & GEN           & SIGN         & VER \\
+        \hline
+        Dilithium-3 \cite{QR_Iot_Lattice}       & 2.3           & 8.3          & 2.3 \\
+        Dilithium-3 \cite{Energy_comp}          & 2.1           & 7.2          & 2.1 \\ %TODO unclear major differences betwwen different measurements, should have conducted my own but no time -> future work
+        2021 Dilithium(dyn)\cite{update_sign}   & -             & 29           & 3.4\\
+        2021 Dilithium(sta)\cite{update_sign}   & -             & 8            & 1.5\\
+        qTESLA-3 \cite{QR_Iot_Lattice}          & 30            & 11           & 2.2\\
+        Falcon-5 \cite{QR_Iot_Lattice}          & 365           & 165          & 1\\
+        2021 Falcon  \cite{update_sign}         & -             & 75           & 1 \footnote{after optimizations these could be improved by further 43\% \cite{falcon_micro_impl}}\\
+        \hline
+    \end{tabular}
+    
+\end{table}
+
+\begin{table}%[htbp]
+    \caption{Flash sizes)}
+    \label{t:flashsize_comp}
+    \centering\begin{tabular}{| r | c |}
+        \hline
+        Scheme & Size \\
+        \hline
+        FALCON & 57KB \\
+        2021 Dilithium (Dyn) & 11KB\\
+        2021 Dilithium (Sta) & 26KB\\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}%[]
+    \caption{Comparison of key and signature sizes}
+    \label{t:key_sig_comp}
+    \centering\begin{tabular}{ | r | c c | }
+        \hline
+        Scheme & public key & signature \\
+        \hline
+        SPHINCS     & 1KB   & 43KB \\
+        Dilithium-3 & 1.4KB & 2.7KB\\
+        FALCON-1    & 900B  & 690B\\
+        FALCON-5    & 1.7KB & 1.3KB\\
+        \hline
+        ECDSA       & 64B   & 64B\\
+        \hline
+    \end{tabular}
+\end{table}
+
+\end{frame}
+
+\subsection{FALCON}
+\begin{frame}
+  \frametitle{FALCON is the fastest verifier}
+
+  \begin{itemize}
+    \item most efficient by far for verification 
+    \begin{itemize}
+      \item smallest public key
+      \item smallest signature
+      \item fastest to verify
+    \end{itemize}
+    \item great for verification only actors
+    \item signing takes very long (1s)
+    \begin{itemize}
+      \item since gauss sampling is used
+      \item also vulnerable to timing / side channel attacks (shown effective)
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+\subsection{Dilithium}
+\begin{frame}
+  \frametitle{Dilithium is the best allrounder}
+
+  \begin{itemize}
+    \item also great verification efficiency 
+    \item ditched gauss sampling
+    \begin{itemize}
+      \item no FFT or FPA 
+      \item everything in constant time $\rightarrow$ no timing attacks
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+\section{Conclusion}
+\begin{frame}
+  \frametitle{QR IoT is possible}
+  \begin{itemize}
+    \item two viable contenders for QR signatures in IOT:
+    \begin{itemize}
+      \item Dilithium
+      \item FALCON
+    \end{itemize}
+    \item already implemented with some kind of optimization
+    \item still probably a little way up to key-length of ECDSA
+    \item but already feasable for C2 devices and FALCON VER on C1
   \end{itemize}
   
-\end{frame}
-
-\subsection{Width-Covorage}
-\begin{frame}{Creating an Overview}
-  \begin{itemize}
-    \item Skimming multiple Quantum Resistant (QR) algorithms \cite{QR_algs,PQClean-GH} that focus on IoT \cite{QR_comparison,Energy_comp,QR_Iot_Lattice,QR_IoT,QR_IoT_Energy} 
-    \item Deeper reserach about signature Schemes \cite{QR_sigs}
-    \item and having a slightly more detailed look at two failed sschemes \cite{WalnutDSA,WalnutDSA_broken,qtesla,qtesla_masked}
-    
-  \end{itemize}
-\end{frame}
-
-\subsection{Depth-Covorage}
-\begin{frame}{Diving Deeper}
-  \begin{itemize}
-    \item  having a deeper look at a NIST QR finalist with the most compact implementation:
-
-    FALCON \cite{falcon_and_dilithium,falcon_micro_impl,bearz}
-   
-    \item  maybe having an outlook in the end on a Hardware-Accelerated QR chip \cite{IoT_ASIC} 
-  \end{itemize}
 
 \end{frame}
 
-\subsection{Ressources}
+\section{Ressources}
 \begin{frame}[allowframebreaks]{Ressources}
+  \nocite{*}
   \bibliographystyle{plain}
   %\bibliography{img}
-  \bibliography{img.bib, ../lit.bib}
+  \bibliography{../graphics/img.bib, ../lit.bib}
 \end{frame}
 
-\subsection{Schedule}
-\begin{frame}{Planned Schedule}
-\begin{itemize}
-  \item 7.5. : skim breadth coverage literature
-  \item 15.5.: write until signatures (at least bullet point comments)
-  \item 30.5.: finish breadth (at least bullet point comments)
-  \item $\alpha$: skim and bullet point Depth
-  \item 30.6.: finish
-\end{itemize}
-\end{frame}
 
 \end{document}
 
